@@ -1,0 +1,29 @@
+name: test
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  windows-powershell:
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Pester
+        shell: powershell
+        run: Install-Module Pester -RequiredVersion 3.4.0 -Scope CurrentUser -Force -SkipPublisherCheck
+      - name: Run Windows PowerShell 5.1 tests
+        shell: powershell
+        run: .\tests\run-tests.ps1
+      - name: Verify module surface
+        shell: powershell
+        run: .\tests\verify-module.ps1
+      - name: Verify Windows host and guidance accessibility
+        shell: powershell
+        run: .\tests\verify-windows-host.ps1
+      - name: Build self-contained release
+        shell: powershell
+        run: |
+          .\tools\Build-Release.ps1
+          .\tools\New-SampleRelease.ps1
+          .\tools\Test-BuiltArtifacts.ps1

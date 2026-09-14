@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "displayName": "ExtGuide Sample",
+  "publisher": "ExtGuide",
+  "installFolderName": "SampleExtension",
+  "archiveUrl": "https://github.com/example/extguide-sample/releases/download/v1.0.0/extension.zip",
+  "sha256": "039058c6f2c0cb492c533b0a4d14ef77cc0f78abccced5287d84a1a2011cfb81",
+  "extensionRoot": "extension"
+}
