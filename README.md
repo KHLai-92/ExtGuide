@@ -27,10 +27,10 @@ Publish a prebuilt Manifest V3 ZIP and a schema-v1 installer manifest. See [the 
 Give users one version-pinned command. Replace only the manifest URL with your published extension release asset:
 
 ```powershell
-[Net.ServicePointManager]::SecurityProtocol=[Net.SecurityProtocolType]::Tls12;$w=New-Object Net.WebClient;try{$s=$w.DownloadString('https://github.com/KHLai-92/ExtGuide/releases/download/v1.0.0/ExtGuide-v1.0.0.ps1')}finally{$w.Dispose()};&([scriptblock]::Create($s)) -ManifestUri 'https://github.com/YOUR-ORG/YOUR-EXTENSION/releases/latest/download/installer-manifest.json'
+[Net.ServicePointManager]::SecurityProtocol=[Net.SecurityProtocolType]::Tls12;$w=New-Object Net.WebClient;try{$s=$w.DownloadString('https://github.com/KHLai-92/ExtGuide/releases/download/v1.1.0/ExtGuide-v1.1.0.ps1')}finally{$w.Dispose()};&([scriptblock]::Create($s)) -ManifestUri 'https://github.com/YOUR-ORG/YOUR-EXTENSION/releases/latest/download/installer-manifest.json'
 ```
 
-The ExtGuide URL is pinned to `v1.0.0`; the extension manifest may independently follow the extension's latest release. `DownloadString` is intentional because GitHub serves PowerShell release assets as binary content. No GitHub API, credentials, Git, Node.js, npm, Python, or 7-Zip is required. The recommended per-user destination needs no administrator rights; Windows may show a UAC prompt only when the user explicitly chooses a protected location.
+The ExtGuide URL is pinned to `v1.1.0`; the extension manifest may independently follow the extension's latest release. `DownloadString` is intentional because GitHub serves PowerShell release assets as binary content. No GitHub API, credentials, Git, Node.js, npm, Python, or 7-Zip is required. The recommended per-user destination needs no administrator rights; Windows may show a UAC prompt only when the user explicitly chooses a protected location.
 
 ## Build and verify
 

@@ -6,7 +6,7 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $repositoryRoot = Split-Path -Parent $PSScriptRoot
-if ([string]::IsNullOrWhiteSpace($ReleaseScript)) { $ReleaseScript = Join-Path $repositoryRoot 'artifacts\extguide-release\ExtGuide-v1.0.0.ps1' }
+if ([string]::IsNullOrWhiteSpace($ReleaseScript)) { $ReleaseScript = Join-Path $repositoryRoot 'artifacts\extguide-release\ExtGuide-v1.1.0.ps1' }
 if ([string]::IsNullOrWhiteSpace($SampleManifest)) { $SampleManifest = Join-Path $repositoryRoot 'artifacts\sample-release\installer-manifest.json' }
 
 $tokens = $null
