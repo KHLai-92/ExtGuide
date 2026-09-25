@@ -8,9 +8,9 @@ $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version 2.0
 
 $script:ExtGuideEmbeddedResources = @{
-    'en' = 'ewogICJJbnN0YWxsVGl0bGUiOiAiSW5zdGFsbCB7MH0iLAogICJJbnN0YWxsRXhwbGFuYXRpb24iOiAiRXh0R3VpZGUgd2lsbCBrZWVwIHRoZSBleHRlbnNpb24gaW4gYSBzdGFibGUgcGVyLXVzZXIgZm9sZGVyLiBObyBhZG1pbmlzdHJhdG9yIHBlcm1pc3Npb24gaXMgcmVxdWlyZWQuIiwKICAiRmluYWxFeHRlbnNpb25Mb2NhdGlvbiI6ICJGaW5hbCBleHRlbnNpb24gbG9jYXRpb24iLAogICJDaGFuZ2VMb2NhdGlvbiI6ICJDaGFuZ2UgbG9jYXRpb24uLi4iLAogICJJbnN0YWxsRXh0ZW5zaW9uIjogIkluc3RhbGwgZXh0ZW5zaW9uIiwKICAiQ2FuY2VsIjogIkNhbmNlbCIsCiAgIkRlc3RpbmF0aW9uSGludCI6ICJUaGUgc2VsZWN0ZWQgZm9sZGVyIHdpbGwgY29udGFpbiBhbiBleHRlbnNpb24tc3BlY2lmaWMgY2hpbGQgZGlyZWN0b3J5LiIsCiAgIkNob29zZUJhc2VGb2xkZXIiOiAiQ2hvb3NlIHRoZSBiYXNlIGZvbGRlciBmb3IgdGhlIGV4dGVuc2lvbiIsCiAgIkluc3RhbGxpbmciOiAiRG93bmxvYWRpbmcsIHZhbGlkYXRpbmcsIGFuZCBpbnN0YWxsaW5nIHRoZSBleHRlbnNpb24uLi4iLAogICJGaW5pc2hUaXRsZSI6ICJGaW5pc2ggc2V0dGluZyB1cCB7MH0iLAogICJGaW5pc2hIZWFkaW5nIjogIkZpbmlzaCBzZXR1cCBpbiBDaHJvbWUiLAogICJGaW5pc2hTdWJoZWFkaW5nIjogIkV4dEd1aWRlIHByZXBhcmVkIHRoZSBmb2xkZXIuIENocm9tZSByZXF1aXJlcyB0aGVzZSBmaW5hbCBjbGlja3MgZnJvbSB5b3UuIiwKICAiU3RlcDEiOiAiMSAgIFR1cm4gb24gRGV2ZWxvcGVyIG1vZGUgaW4gdGhlIHVwcGVyLXJpZ2h0IGNvcm5lci4iLAogICJTdGVwMiI6ICIyICAgQ2hvb3NlIExvYWQgdW5wYWNrZWQuIiwKICAiU3RlcDMiOiAiMyAgIEluIHRoZSBmb2xkZXIgZGlhbG9nLCBmb2N1cyB0aGUgbG9jYXRpb24gZmllbGQgKEN0cmwrTCkuIiwKICAiU3RlcDQiOiAiNCAgIFBhc3RlIHRoZSBwcmVwYXJlZCBwYXRoIChDdHJsK1YpLCB0aGVuIHByZXNzIEVudGVyLiIsCiAgIlN0ZXA1IjogIjUgICBDb25maXJtIHRoZSBmb2xkZXIgaWYgQ2hyb21lIGFza3MuIiwKICAiVmlzdWFsR3VpZGVBY2Nlc3NpYmxlTmFtZSI6ICJDaHJvbWUgRXh0ZW5zaW9ucyBwYWdlIHNob3dpbmcgRGV2ZWxvcGVyIG1vZGUgb3V0bGluZWQgaW4gZ3JlZW4gYW5kIExvYWQgdW5wYWNrZWQgb3V0bGluZWQgaW4gb3JhbmdlIiwKICAiVmlzdWFsR3VpZGVDYXB0aW9uIjogIlZpc3VhbCBndWlkZTogZ3JlZW4gbWFya3MgRGV2ZWxvcGVyIG1vZGU7IG9yYW5nZSBtYXJrcyBMb2FkIHVucGFja2VkLlxuU291cmNlOiBDaHJvbWUgZm9yIERldmVsb3BlcnMgKENDIEJZIDQuMCkuIiwKICAiUHJlcGFyZWRFeHRlbnNpb25QYXRoIjogIlByZXBhcmVkIGV4dGVuc2lvbiBwYXRoIiwKICAiQ29weVBhdGgiOiAiQ29weSBwYXRoIiwKICAiUmVvcGVuRXh0ZW5zaW9uc1BhZ2UiOiAiUmVvcGVuIGV4dGVuc2lvbnMgcGFnZSIsCiAgIk9wZW5Gb2xkZXIiOiAiT3BlbiBmb2xkZXIiLAogICJEb25lIjogIkRvbmUiLAogICJDaG9vc2VDaHJvbWVUaXRsZSI6ICJDaG9vc2UgR29vZ2xlIENocm9tZSIsCiAgIkNob29zZUNocm9tZUhlYWRpbmciOiAiQ2hvb3NlIHRoZSBDaHJvbWUgaW5zdGFsbGF0aW9uIHRvIG9wZW4iLAogICJWYWxpZGF0ZWRDaHJvbWVFeHBsYW5hdGlvbiI6ICJFdmVyeSBsaXN0ZWQgYXBwbGljYXRpb24gcGFzc2VkIEV4dEd1aWRlIHZhbGlkYXRpb24uIiwKICAiVmFsaWRhdGVkQ2hyb21lSW5zdGFsbGF0aW9ucyI6ICJWYWxpZGF0ZWQgR29vZ2xlIENocm9tZSBpbnN0YWxsYXRpb25zIiwKICAiVXNlU2VsZWN0ZWRDaHJvbWUiOiAiVXNlIHNlbGVjdGVkIENocm9tZSIsCiAgIkNob29zZUFub3RoZXJGaWxlIjogIkNob29zZSBhbm90aGVyIGZpbGUuLi4iLAogICJTZWxlY3RDaHJvbWVUaXRsZSI6ICJTZWxlY3QgR29vZ2xlIENocm9tZSIsCiAgIkNocm9tZUZpbGVGaWx0ZXIiOiAiR29vZ2xlIENocm9tZSAoY2hyb21lLmV4ZSl8Y2hyb21lLmV4ZXxBcHBsaWNhdGlvbnMgKCouZXhlKXwqLmV4ZSIsCiAgIldoYXRUb0RvIjogIldoYXQgdG8gZG86IHswfSIsCiAgIkVycm9yVGl0bGUiOiAiRXh0R3VpZGUgLSB7MH0iLAogICJNYW5hZ2VkRGV2ZWxvcGVyVG9vbHMiOiAiWW91ciBvcmdhbml6YXRpb24gZGlzYWJsZXMgQ2hyb21lIGRldmVsb3BlciB0b29scy4gRGV2ZWxvcGVyIG1vZGUgbWF5IGFsc28gYmUgcmVzdHJpY3RlZC4iLAogICJNYW5hZ2VkRXh0ZW5zaW9ucyI6ICJZb3VyIG9yZ2FuaXphdGlvbiBibG9ja3MgZXh0ZW5zaW9uIGluc3RhbGxhdGlvbiB1bmxlc3MgYW4gYWRtaW5pc3RyYXRvciBhbGxvd3MgaXQuIiwKICAiTWFuYWdlZFBvbGljeU5vdGljZSI6ICJNYW5hZ2VkIGRldmljZSBwb2xpY3kgbm90aWNlIiwKICAiUHJldmlld0Rpc3BsYXlOYW1lIjogIkV4dEd1aWRlIFNhbXBsZSIKfQo='
+    'en' = 'ewogICJJbnN0YWxsVGl0bGUiOiAiSW5zdGFsbCB7MH0iLAogICJJbnN0YWxsRXhwbGFuYXRpb24iOiAiRXh0R3VpZGUgd2lsbCBrZWVwIHRoZSBleHRlbnNpb24gYXQgdGhlIHNlbGVjdGVkIGxvY2F0aW9uLiBXaW5kb3dzIG1heSByZXF1ZXN0IGFkbWluaXN0cmF0b3IgcGVybWlzc2lvbiBmb3IgYSBwcm90ZWN0ZWQgZm9sZGVyLiIsCiAgIkZpbmFsRXh0ZW5zaW9uTG9jYXRpb24iOiAiRmluYWwgZXh0ZW5zaW9uIGxvY2F0aW9uIiwKICAiQ2hhbmdlTG9jYXRpb24iOiAiQ2hhbmdlIGxvY2F0aW9uLi4uIiwKICAiSW5zdGFsbEV4dGVuc2lvbiI6ICJJbnN0YWxsIGV4dGVuc2lvbiIsCiAgIlVwZGF0ZVRpdGxlIjogIlVwZGF0ZSB7MH0iLAogICJVcGRhdGVFeHBsYW5hdGlvbiI6ICJFeHRHdWlkZSBmb3VuZCBhbiBleGlzdGluZyBpbnN0YWxsYXRpb24gYW5kIHdpbGwgc2FmZWx5IHJlcGxhY2UgaXQgYXQgdGhlIHNhbWUgbG9jYXRpb24uIiwKICAiVXBkYXRlRXh0ZW5zaW9uIjogIlVwZGF0ZSBleHRlbnNpb24iLAogICJDYW5jZWwiOiAiQ2FuY2VsIiwKICAiRGVzdGluYXRpb25IaW50IjogIlRoZSBzZWxlY3RlZCBmb2xkZXIgd2lsbCBjb250YWluIGFuIGV4dGVuc2lvbi1zcGVjaWZpYyBjaGlsZCBkaXJlY3RvcnkuIiwKICAiQ2hvb3NlQmFzZUZvbGRlciI6ICJDaG9vc2UgdGhlIGJhc2UgZm9sZGVyIGZvciB0aGUgZXh0ZW5zaW9uIiwKICAiQ2hvb3NlV3JpdGFibGVCYXNlRm9sZGVyIjogIkNob29zZSBhbm90aGVyIGluc3RhbGxhdGlvbiBmb2xkZXIiLAogICJJbnN0YWxsaW5nIjogIkRvd25sb2FkaW5nLCB2YWxpZGF0aW5nLCBhbmQgaW5zdGFsbGluZyB0aGUgZXh0ZW5zaW9uLi4uIiwKICAiQWRtaW5pc3RyYXRvclBlcm1pc3Npb25UaXRsZSI6ICJBZG1pbmlzdHJhdG9yIHBlcm1pc3Npb24gcmVxdWlyZWQiLAogICJBZG1pbmlzdHJhdG9yUGVybWlzc2lvbkV4cGxhbmF0aW9uIjogIldpbmRvd3MgcHJvdGVjdHMgdGhpcyBsb2NhdGlvbi4gWW91IGNhbiByZXF1ZXN0IGFkbWluaXN0cmF0b3IgcGVybWlzc2lvbiBmb3IgdGhpcyBpbnN0YWxsYXRpb24sIGNob29zZSBhbm90aGVyIGZvbGRlciwgb3IgY2FuY2VsLiIsCiAgIlVzZUFkbWluaXN0cmF0b3JQZXJtaXNzaW9uIjogIlVzZSBhZG1pbmlzdHJhdG9yIHBlcm1pc3Npb24iLAogICJDaG9vc2VBbm90aGVyTG9jYXRpb24iOiAiQ2hvb3NlIGFub3RoZXIgbG9jYXRpb24iLAogICJGaW5pc2hUaXRsZSI6ICJGaW5pc2ggc2V0dGluZyB1cCB7MH0iLAogICJGaW5pc2hIZWFkaW5nIjogIkZpbmlzaCBzZXR1cCBpbiBDaHJvbWUiLAogICJGaW5pc2hTdWJoZWFkaW5nIjogIkV4dEd1aWRlIHByZXBhcmVkIHRoZSBmb2xkZXIuIENocm9tZSByZXF1aXJlcyB0aGVzZSBmaW5hbCBjbGlja3MgZnJvbSB5b3UuIiwKICAiU3RlcDEiOiAiMSAgIFR1cm4gb24gRGV2ZWxvcGVyIG1vZGUgaW4gdGhlIHVwcGVyLXJpZ2h0IGNvcm5lci4iLAogICJTdGVwMiI6ICIyICAgQ2hvb3NlIExvYWQgdW5wYWNrZWQuIiwKICAiU3RlcDMiOiAiMyAgIEluIHRoZSBmb2xkZXIgZGlhbG9nLCBmb2N1cyB0aGUgbG9jYXRpb24gZmllbGQgKEN0cmwrTCkuIiwKICAiU3RlcDQiOiAiNCAgIFBhc3RlIHRoZSBwcmVwYXJlZCBwYXRoIChDdHJsK1YpLCB0aGVuIHByZXNzIEVudGVyLiIsCiAgIlN0ZXA1IjogIjUgICBDb25maXJtIHRoZSBmb2xkZXIgaWYgQ2hyb21lIGFza3MuIiwKICAiVXBkYXRlRmluaXNoVGl0bGUiOiAiUmVsb2FkIHswfSBpbiBDaHJvbWUiLAogICJVcGRhdGVGaW5pc2hIZWFkaW5nIjogIlJlbG9hZCB0aGUgdXBkYXRlZCBleHRlbnNpb24iLAogICJVcGRhdGVGaW5pc2hTdWJoZWFkaW5nIjogIkV4dEd1aWRlIHVwZGF0ZWQgdGhlIGV4aXN0aW5nIGZpbGVzIGF0IHRoZSBzYW1lIGxvY2F0aW9uLiBDaHJvbWUgbXVzdCByZWxvYWQgdGhlbS4iLAogICJVcGRhdGVTdGVwMSI6ICIxICAgRmluZCB0aGUgZXhpc3RpbmcgZXh0ZW5zaW9uIGNhcmQgb24gdGhlIENocm9tZSBFeHRlbnNpb25zIHBhZ2UuIiwKICAiVXBkYXRlU3RlcDIiOiAiMiAgIENob29zZSBSZWxvYWQgb24gdGhhdCBjYXJkLiIsCiAgIlVwZGF0ZVN0ZXAzIjogIjMgICBJZiBSZWxvYWQgaXMgaGlkZGVuLCBlbmFibGUgRGV2ZWxvcGVyIG1vZGUgZmlyc3QuIiwKICAiVmlzdWFsR3VpZGVBY2Nlc3NpYmxlTmFtZSI6ICJDaHJvbWUgRXh0ZW5zaW9ucyBwYWdlIHNob3dpbmcgRGV2ZWxvcGVyIG1vZGUgb3V0bGluZWQgaW4gZ3JlZW4gYW5kIExvYWQgdW5wYWNrZWQgb3V0bGluZWQgaW4gb3JhbmdlIiwKICAiVmlzdWFsR3VpZGVDYXB0aW9uIjogIlZpc3VhbCBndWlkZTogZ3JlZW4gbWFya3MgRGV2ZWxvcGVyIG1vZGU7IG9yYW5nZSBtYXJrcyBMb2FkIHVucGFja2VkLlxuU291cmNlOiBDaHJvbWUgZm9yIERldmVsb3BlcnMgKENDIEJZIDQuMCkuIiwKICAiUHJlcGFyZWRFeHRlbnNpb25QYXRoIjogIlByZXBhcmVkIGV4dGVuc2lvbiBwYXRoIiwKICAiQ29weVBhdGgiOiAiQ29weSBwYXRoIiwKICAiUmVvcGVuRXh0ZW5zaW9uc1BhZ2UiOiAiUmVvcGVuIGV4dGVuc2lvbnMgcGFnZSIsCiAgIk9wZW5Gb2xkZXIiOiAiT3BlbiBmb2xkZXIiLAogICJEb25lIjogIkRvbmUiLAogICJDaG9vc2VDaHJvbWVUaXRsZSI6ICJDaG9vc2UgR29vZ2xlIENocm9tZSIsCiAgIkNob29zZUNocm9tZUhlYWRpbmciOiAiQ2hvb3NlIHRoZSBDaHJvbWUgaW5zdGFsbGF0aW9uIHRvIG9wZW4iLAogICJWYWxpZGF0ZWRDaHJvbWVFeHBsYW5hdGlvbiI6ICJFdmVyeSBsaXN0ZWQgYXBwbGljYXRpb24gcGFzc2VkIEV4dEd1aWRlIHZhbGlkYXRpb24uIiwKICAiVmFsaWRhdGVkQ2hyb21lSW5zdGFsbGF0aW9ucyI6ICJWYWxpZGF0ZWQgR29vZ2xlIENocm9tZSBpbnN0YWxsYXRpb25zIiwKICAiVXNlU2VsZWN0ZWRDaHJvbWUiOiAiVXNlIHNlbGVjdGVkIENocm9tZSIsCiAgIkNob29zZUFub3RoZXJGaWxlIjogIkNob29zZSBhbm90aGVyIGZpbGUuLi4iLAogICJTZWxlY3RDaHJvbWVUaXRsZSI6ICJTZWxlY3QgR29vZ2xlIENocm9tZSIsCiAgIkNocm9tZUZpbGVGaWx0ZXIiOiAiR29vZ2xlIENocm9tZSAoY2hyb21lLmV4ZSl8Y2hyb21lLmV4ZXxBcHBsaWNhdGlvbnMgKCouZXhlKXwqLmV4ZSIsCiAgIldoYXRUb0RvIjogIldoYXQgdG8gZG86IHswfSIsCiAgIkVycm9yVGl0bGUiOiAiRXh0R3VpZGUgLSB7MH0iLAogICJNYW5hZ2VkRGV2ZWxvcGVyVG9vbHMiOiAiWW91ciBvcmdhbml6YXRpb24gZGlzYWJsZXMgQ2hyb21lIGRldmVsb3BlciB0b29scy4gRGV2ZWxvcGVyIG1vZGUgbWF5IGFsc28gYmUgcmVzdHJpY3RlZC4iLAogICJNYW5hZ2VkRXh0ZW5zaW9ucyI6ICJZb3VyIG9yZ2FuaXphdGlvbiBibG9ja3MgZXh0ZW5zaW9uIGluc3RhbGxhdGlvbiB1bmxlc3MgYW4gYWRtaW5pc3RyYXRvciBhbGxvd3MgaXQuIiwKICAiTWFuYWdlZFBvbGljeU5vdGljZSI6ICJNYW5hZ2VkIGRldmljZSBwb2xpY3kgbm90aWNlIiwKICAiUHJldmlld0Rpc3BsYXlOYW1lIjogIkV4dEd1aWRlIFNhbXBsZSIKfQo='
     'zh-CN' = 'ewogICJJbnN0YWxsVGl0bGUiOiAi5a6J6KOFIHswfSIsCiAgIkluc3RhbGxFeHBsYW5hdGlvbiI6ICJFeHRHdWlkZSDkvJrlsIbmianlsZXnqIvluo/kv53lrZjlnKjnqLPlrprnmoTnlKjmiLfmlofku7blpLnkuK3vvIzkuI3pnIDopoHnrqHnkIblkZjmnYPpmZDjgIIiLAogICJGaW5hbEV4dGVuc2lvbkxvY2F0aW9uIjogIuaJqeWxleeoi+W6j+acgOe7iOS9jee9riIsCiAgIkNoYW5nZUxvY2F0aW9uIjogIuabtOaUueS9jee9ri4uLiIsCiAgIkluc3RhbGxFeHRlbnNpb24iOiAi5a6J6KOF5omp5bGV56iL5bqPIiwKICAiQ2FuY2VsIjogIuWPlua2iCIsCiAgIkRlc3RpbmF0aW9uSGludCI6ICLmiYDpgInmlofku7blpLnlhoXkvJrliJvlu7rmianlsZXnqIvluo/kuJPnlKjlrZDmlofku7blpLnjgIIiLAogICJDaG9vc2VCYXNlRm9sZGVyIjogIumAieaLqeaJqeWxleeoi+W6j+eahOWfuuehgOaWh+S7tuWkuSIsCiAgIkluc3RhbGxpbmciOiAi5q2j5Zyo5LiL6L2944CB6aqM6K+B5bm25a6J6KOF5omp5bGV56iL5bqPLi4uIiwKICAiRmluaXNoVGl0bGUiOiAi5ZyoIENocm9tZSDkuK3lrozmiJAgezB9IOiuvue9riIsCiAgIkZpbmlzaEhlYWRpbmciOiAi5ZyoIENocm9tZSDkuK3lrozmiJDorr7nva4iLAogICJGaW5pc2hTdWJoZWFkaW5nIjogIkV4dEd1aWRlIOW3suWHhuWkh+WlveaWh+S7tuWkueOAguacgOWQjuWHoOS4quatpemqpOW/hemhu+eUseS9oOWcqCBDaHJvbWUg5Lit5a6M5oiQ44CCIiwKICAiU3RlcDEiOiAiMSAgIOaJk+W8gOWPs+S4iuinkueahOKAnOW8gOWPkeiAheaooeW8j+KAneOAgiIsCiAgIlN0ZXAyIjogIjIgICDpgInmi6nigJzliqDovb3lt7Lop6PljovnmoTmianlsZXnqIvluo/igJ3jgIIiLAogICJTdGVwMyI6ICIzICAg5Zyo5paH5Lu25aS55a+56K+d5qGG5Lit77yM5oyJIEN0cmwrTCDogZrnhKbkvY3nva7moI/jgIIiLAogICJTdGVwNCI6ICI0ICAg5oyJIEN0cmwrViDnspjotLTlh4blpIflpb3nmoTot6/lvoTvvIzlho3mjIkgRW50ZXLjgIIiLAogICJTdGVwNSI6ICI1ICAg5aaC5p6cIENocm9tZSDor6Lpl67vvIzor7fnoa7orqTmlofku7blpLnjgIIiLAogICJQcmVwYXJlZEV4dGVuc2lvblBhdGgiOiAi5bey5YeG5aSH55qE5omp5bGV56iL5bqP6Lev5b6EIiwKICAiQ29weVBhdGgiOiAi5aSN5Yi26Lev5b6EIiwKICAiUmVvcGVuRXh0ZW5zaW9uc1BhZ2UiOiAi6YeN5paw5omT5byA5omp5bGV56iL5bqP6aG16Z2iIiwKICAiT3BlbkZvbGRlciI6ICLmiZPlvIDmlofku7blpLkiLAogICJEb25lIjogIuWujOaIkCIsCiAgIkNob29zZUNocm9tZVRpdGxlIjogIumAieaLqSBHb29nbGUgQ2hyb21lIiwKICAiQ2hvb3NlQ2hyb21lSGVhZGluZyI6ICLpgInmi6nopoHmiZPlvIDnmoQgQ2hyb21lIOWuieijhSIsCiAgIlZhbGlkYXRlZENocm9tZUV4cGxhbmF0aW9uIjogIuS4i+WIl+W6lOeUqOeoi+W6j+mDveW3sumAmui/hyBFeHRHdWlkZSDpqozor4HjgIIiLAogICJWYWxpZGF0ZWRDaHJvbWVJbnN0YWxsYXRpb25zIjogIuW3sumqjOivgeeahCBHb29nbGUgQ2hyb21lIOWuieijhSIsCiAgIlVzZVNlbGVjdGVkQ2hyb21lIjogIuS9v+eUqOaJgOmAiSBDaHJvbWUiLAogICJDaG9vc2VBbm90aGVyRmlsZSI6ICLpgInmi6nlhbbku5bmlofku7YuLi4iLAogICJTZWxlY3RDaHJvbWVUaXRsZSI6ICLpgInmi6kgR29vZ2xlIENocm9tZSIsCiAgIkNocm9tZUZpbGVGaWx0ZXIiOiAiR29vZ2xlIENocm9tZSAoY2hyb21lLmV4ZSl8Y2hyb21lLmV4ZXzlupTnlKjnqIvluo8gKCouZXhlKXwqLmV4ZSIsCiAgIldoYXRUb0RvIjogIuWkhOeQhuaWueazle+8mnswfSIsCiAgIkVycm9yVGl0bGUiOiAiRXh0R3VpZGUgLSB7MH0iLAogICJNYW5hZ2VkRGV2ZWxvcGVyVG9vbHMiOiAi5L2g55qE57uE57uH5bey5YGc55SoIENocm9tZSDlvIDlj5HogIXlt6XlhbfvvIzlvIDlj5HogIXmqKHlvI/kuZ/lj6/og73lj5fliLDpmZDliLbjgIIiLAogICJNYW5hZ2VkRXh0ZW5zaW9ucyI6ICLkvaDnmoTnu4Tnu4fnpoHmraLlronoo4XmianlsZXnqIvluo/vvIzpmaTpnZ7nrqHnkIblkZjlhYHorrjjgIIiLAogICJNYW5hZ2VkUG9saWN5Tm90aWNlIjogIuWPl+euoeeQhuiuvuWkh+etlueVpemAmuefpSIsCiAgIlByZXZpZXdEaXNwbGF5TmFtZSI6ICJFeHRHdWlkZSDnpLrkvosiCn0K'
-    'zh-TW' = 'ewogICJJbnN0YWxsVGl0bGUiOiAi5a6J6KOdIHswfSIsCiAgIkluc3RhbGxFeHBsYW5hdGlvbiI6ICJFeHRHdWlkZSDmnIPlsIfmk7TlhYXlip/og73kv53lrZjlnKjnqanlrprnmoTkvb/nlKjogIXos4fmlpnlpL7kuK3vvIzkuI3pnIDopoHns7vntbHnrqHnkIblk6HmrIrpmZDjgIIiLAogICJGaW5hbEV4dGVuc2lvbkxvY2F0aW9uIjogIuaTtOWFheWKn+iDveacgOe1guS9jee9riIsCiAgIkNoYW5nZUxvY2F0aW9uIjogIuiuiuabtOS9jee9ri4uLiIsCiAgIkluc3RhbGxFeHRlbnNpb24iOiAi5a6J6KOd5pO05YWF5Yqf6IO9IiwKICAiQ2FuY2VsIjogIuWPlua2iCIsCiAgIkRlc3RpbmF0aW9uSGludCI6ICLmiYDpgbjos4fmlpnlpL7lhafmnIPlu7rnq4vmk7TlhYXlip/og73lsIjnlKjlrZDos4fmlpnlpL7jgIIiLAogICJDaG9vc2VCYXNlRm9sZGVyIjogIumBuOaTh+aTtOWFheWKn+iDveeahOWfuuW6leizh+aWmeWkviIsCiAgIkluc3RhbGxpbmciOiAi5q2j5Zyo5LiL6LyJ44CB6amX6K2J5Lim5a6J6KOd5pO05YWF5Yqf6IO9Li4uIiwKICAiRmluaXNoVGl0bGUiOiAi5ZyoIENocm9tZSDkuK3lrozmiJAgezB9IOioreWumiIsCiAgIkZpbmlzaEhlYWRpbmciOiAi5ZyoIENocm9tZSDkuK3lrozmiJDoqK3lrpoiLAogICJGaW5pc2hTdWJoZWFkaW5nIjogIkV4dEd1aWRlIOW3sua6luWCmeWlveizh+aWmeWkvuOAguacgOW+jOW5vuWAi+atpempn+W/hemgiOeUseS9oOWcqCBDaHJvbWUg5Lit5a6M5oiQ44CCIiwKICAiU3RlcDEiOiAiMSAgIOmWi+WVn+WPs+S4iuinkueahOOAjOmWi+eZvOS6uuWToeaooeW8j+OAjeOAgiIsCiAgIlN0ZXAyIjogIjIgICDpgbjmk4fjgIzovInlhaXmnKrlsIHoo53poIXnm67jgI3jgIIiLAogICJTdGVwMyI6ICIzICAg5Zyo6LOH5paZ5aS+5bCN6Kmx5qGG5Lit77yM5oyJIEN0cmwrTCDogZrnhKbkvY3nva7mrITjgIIiLAogICJTdGVwNCI6ICI0ICAg5oyJIEN0cmwrViDosrzkuIrmupblgpnlpb3nmoTot6/lvpHvvIzlho3mjIkgRW50ZXLjgIIiLAogICJTdGVwNSI6ICI1ICAg5aaC5p6cIENocm9tZSDoqaLllY/vvIzoq4vnorroqo3os4fmlpnlpL7jgIIiLAogICJWaXN1YWxHdWlkZUFjY2Vzc2libGVOYW1lIjogIkNocm9tZSDmk7TlhYXlip/og73poIHpnaLvvIzntqDmoYbmqJnnpLrplovnmbzkurrlk6HmqKHlvI/vvIzmqZjmoYbmqJnnpLrovInlhaXmnKrlsIHoo53poIXnm64iLAogICJWaXN1YWxHdWlkZUNhcHRpb24iOiAi5ZyW56S677ya57ag5qGG5piv44CM6ZaL55m85Lq65ZOh5qih5byP44CN77yM5qmY5qGG5piv44CM6LyJ5YWl5pyq5bCB6KOd6aCF55uu44CN44CCXG7kvobmupDvvJpDaHJvbWUgZm9yIERldmVsb3BlcnPvvIhDQyBCWSA0LjDvvInvvIznlLEgRXh0R3VpZGUg57+76K2v44CCIiwKICAiUHJlcGFyZWRFeHRlbnNpb25QYXRoIjogIuW3sua6luWCmeeahOaTtOWFheWKn+iDvei3r+W+kSIsCiAgIkNvcHlQYXRoIjogIuikh+ijvei3r+W+kSIsCiAgIlJlb3BlbkV4dGVuc2lvbnNQYWdlIjogIumHjeaWsOmWi+WVn+aTtOWFheWKn+iDvemggemdoiIsCiAgIk9wZW5Gb2xkZXIiOiAi6ZaL5ZWf6LOH5paZ5aS+IiwKICAiRG9uZSI6ICLlrozmiJAiLAogICJDaG9vc2VDaHJvbWVUaXRsZSI6ICLpgbjmk4cgR29vZ2xlIENocm9tZSIsCiAgIkNob29zZUNocm9tZUhlYWRpbmciOiAi6YG45pOH6KaB6ZaL5ZWf55qEIENocm9tZSDlronoo50iLAogICJWYWxpZGF0ZWRDaHJvbWVFeHBsYW5hdGlvbiI6ICLkuIvliJfmh4nnlKjnqIvlvI/pg73lt7LpgJrpgY4gRXh0R3VpZGUg6amX6K2J44CCIiwKICAiVmFsaWRhdGVkQ2hyb21lSW5zdGFsbGF0aW9ucyI6ICLlt7LpqZforYnnmoQgR29vZ2xlIENocm9tZSDlronoo50iLAogICJVc2VTZWxlY3RlZENocm9tZSI6ICLkvb/nlKjpgbjlj5bnmoQgQ2hyb21lIiwKICAiQ2hvb3NlQW5vdGhlckZpbGUiOiAi6YG45pOH5YW25LuW5qqU5qGILi4uIiwKICAiU2VsZWN0Q2hyb21lVGl0bGUiOiAi6YG45Y+WIEdvb2dsZSBDaHJvbWUiLAogICJDaHJvbWVGaWxlRmlsdGVyIjogIkdvb2dsZSBDaHJvbWUgKGNocm9tZS5leGUpfGNocm9tZS5leGV85oeJ55So56iL5byPICgqLmV4ZSl8Ki5leGUiLAogICJXaGF0VG9EbyI6ICLomZXnkIbmlrnlvI/vvJp7MH0iLAogICJFcnJvclRpdGxlIjogIkV4dEd1aWRlIC0gezB9IiwKICAiTWFuYWdlZERldmVsb3BlclRvb2xzIjogIuS9oOeahOe1hOe5lOW3suWBnOeUqCBDaHJvbWUg6ZaL55m85Lq65ZOh5bel5YW377yM6ZaL55m85Lq65ZOh5qih5byP5Lmf5Y+v6IO95Y+X5Yiw6ZmQ5Yi244CCIiwKICAiTWFuYWdlZEV4dGVuc2lvbnMiOiAi5L2g55qE57WE57mU56aB5q2i5a6J6KOd5pO05YWF5Yqf6IO977yM6Zmk6Z2e57O757Wx566h55CG5ZOh5YWB6Kix44CCIiwKICAiTWFuYWdlZFBvbGljeU5vdGljZSI6ICLlj5fnrqHoo53nva7mlL/nrZbpgJrnn6UiLAogICJQcmV2aWV3RGlzcGxheU5hbWUiOiAiRXh0R3VpZGUg56+E5L6LIgp9Cg=='
+    'zh-TW' = 'ewogICJJbnN0YWxsVGl0bGUiOiAi5a6J6KOdIHswfSIsCiAgIkluc3RhbGxFeHBsYW5hdGlvbiI6ICJFeHRHdWlkZSDmnIPlsIfmk7TlhYXlip/og73kv53lrZjlnKjmiYDpgbjkvY3nva7vvJvoi6Xos4fmlpnlpL7lj5cgV2luZG93cyDkv53orbfvvIzlronoo53mmYLlj6/og73opoHmsYLns7vntbHnrqHnkIblk6HmrIrpmZDjgIIiLAogICJGaW5hbEV4dGVuc2lvbkxvY2F0aW9uIjogIuaTtOWFheWKn+iDveacgOe1guS9jee9riIsCiAgIkNoYW5nZUxvY2F0aW9uIjogIuiuiuabtOS9jee9ri4uLiIsCiAgIkluc3RhbGxFeHRlbnNpb24iOiAi5a6J6KOd5pO05YWF5Yqf6IO9IiwKICAiVXBkYXRlVGl0bGUiOiAi5pu05pawIHswfSIsCiAgIlVwZGF0ZUV4cGxhbmF0aW9uIjogIkV4dEd1aWRlIOaJvuWIsOaXouacieWuieijne+8jOS4puacg+WcqOebuOWQjOS9jee9ruWuieWFqOWcsOWPluS7o+iIiueJiOOAgiIsCiAgIlVwZGF0ZUV4dGVuc2lvbiI6ICLmm7TmlrDmk7TlhYXlip/og70iLAogICJDYW5jZWwiOiAi5Y+W5raIIiwKICAiRGVzdGluYXRpb25IaW50IjogIuaJgOmBuOizh+aWmeWkvuWFp+acg+W7uueri+aTtOWFheWKn+iDveWwiOeUqOWtkOizh+aWmeWkvuOAgiIsCiAgIkNob29zZUJhc2VGb2xkZXIiOiAi6YG45pOH5pO05YWF5Yqf6IO955qE5Z+65bqV6LOH5paZ5aS+IiwKICAiQ2hvb3NlV3JpdGFibGVCYXNlRm9sZGVyIjogIumBuOaTh+WPpuS4gOWAi+Wuieijneizh+aWmeWkviIsCiAgIkluc3RhbGxpbmciOiAi5q2j5Zyo5LiL6LyJ44CB6amX6K2J5Lim5a6J6KOd5pO05YWF5Yqf6IO9Li4uIiwKICAiQWRtaW5pc3RyYXRvclBlcm1pc3Npb25UaXRsZSI6ICLpnIDopoHns7vntbHnrqHnkIblk6HmrIrpmZAiLAogICJBZG1pbmlzdHJhdG9yUGVybWlzc2lvbkV4cGxhbmF0aW9uIjogIldpbmRvd3Mg5L+d6K236YCZ5YCL5L2N572u44CC5L2g5Y+v5Lul54K66YCZ5qyh5a6J6KOd6KaB5rGC57O757Wx566h55CG5ZOh5qyK6ZmQ44CB6YG45pOH5YW25LuW6LOH5paZ5aS+77yM5oiW5Y+W5raI5a6J6KOd44CCIiwKICAiVXNlQWRtaW5pc3RyYXRvclBlcm1pc3Npb24iOiAi5L2/55So57O757Wx566h55CG5ZOh5qyK6ZmQIiwKICAiQ2hvb3NlQW5vdGhlckxvY2F0aW9uIjogIumBuOaTh+WFtuS7luS9jee9riIsCiAgIkZpbmlzaFRpdGxlIjogIuWcqCBDaHJvbWUg5Lit5a6M5oiQIHswfSDoqK3lrpoiLAogICJGaW5pc2hIZWFkaW5nIjogIuWcqCBDaHJvbWUg5Lit5a6M5oiQ6Kit5a6aIiwKICAiRmluaXNoU3ViaGVhZGluZyI6ICJFeHRHdWlkZSDlt7Lmupblgpnlpb3os4fmlpnlpL7jgILmnIDlvozlub7lgIvmraXpqZ/lv4XpoIjnlLHkvaDlnKggQ2hyb21lIOS4reWujOaIkOOAgiIsCiAgIlN0ZXAxIjogIjEgICDplovllZ/lj7PkuIrop5LnmoTjgIzplovnmbzkurrlk6HmqKHlvI/jgI3jgIIiLAogICJTdGVwMiI6ICIyICAg6YG45pOH44CM6LyJ5YWl5pyq5bCB6KOd6aCF55uu44CN44CCIiwKICAiU3RlcDMiOiAiMyAgIOWcqOizh+aWmeWkvuWwjeipseahhuS4re+8jOaMiSBDdHJsK0wg6IGa54Sm5L2N572u5qyE44CCIiwKICAiU3RlcDQiOiAiNCAgIOaMiSBDdHJsK1Yg6LK85LiK5rqW5YKZ5aW955qE6Lev5b6R77yM5YaN5oyJIEVudGVy44CCIiwKICAiU3RlcDUiOiAiNSAgIOWmguaenCBDaHJvbWUg6Kmi5ZWP77yM6KuL56K66KqN6LOH5paZ5aS+44CCIiwKICAiVXBkYXRlRmluaXNoVGl0bGUiOiAi5ZyoIENocm9tZSDkuK3ph43mlrDovInlhaUgezB9IiwKICAiVXBkYXRlRmluaXNoSGVhZGluZyI6ICLph43mlrDovInlhaXlt7Lmm7TmlrDnmoTmk7TlhYXlip/og70iLAogICJVcGRhdGVGaW5pc2hTdWJoZWFkaW5nIjogIkV4dEd1aWRlIOW3suWcqOebuOWQjOS9jee9ruabtOaWsOaqlOahiO+8m0Nocm9tZSDpnIDopoHph43mlrDovInlhaXpgJnkupvmqpTmoYjjgIIiLAogICJVcGRhdGVTdGVwMSI6ICIxICAg5ZyoIENocm9tZSDmk7TlhYXlip/og73poIHpnaLmib7liLDml6LmnInnmoTmk7TlhYXlip/og73ljaHniYfjgIIiLAogICJVcGRhdGVTdGVwMiI6ICIyICAg5Zyo6Kmy5Y2h54mH5LiK6YG45pOH44CM6YeN5paw6LyJ5YWl44CN44CCIiwKICAiVXBkYXRlU3RlcDMiOiAiMyAgIOWmguaenOeci+S4jeWIsOOAjOmHjeaWsOi8ieWFpeOAje+8jOiri+WFiOmWi+WVn+OAjOmWi+eZvOS6uuWToeaooeW8j+OAjeOAgiIsCiAgIlZpc3VhbEd1aWRlQWNjZXNzaWJsZU5hbWUiOiAiQ2hyb21lIOaTtOWFheWKn+iDvemggemdou+8jOe2oOahhuaomeekuumWi+eZvOS6uuWToeaooeW8j++8jOapmOahhuaomeekuui8ieWFpeacquWwgeijnemgheebriIsCiAgIlZpc3VhbEd1aWRlQ2FwdGlvbiI6ICLlnJbnpLrvvJrntqDmoYbmmK/jgIzplovnmbzkurrlk6HmqKHlvI/jgI3vvIzmqZjmoYbmmK/jgIzovInlhaXmnKrlsIHoo53poIXnm67jgI3jgIJcbuS+hua6kO+8mkNocm9tZSBmb3IgRGV2ZWxvcGVyc++8iENDIEJZIDQuMO+8ie+8jOeUsSBFeHRHdWlkZSDnv7vora/jgIIiLAogICJQcmVwYXJlZEV4dGVuc2lvblBhdGgiOiAi5bey5rqW5YKZ55qE5pO05YWF5Yqf6IO96Lev5b6RIiwKICAiQ29weVBhdGgiOiAi6KSH6KO96Lev5b6RIiwKICAiUmVvcGVuRXh0ZW5zaW9uc1BhZ2UiOiAi6YeN5paw6ZaL5ZWf5pO05YWF5Yqf6IO96aCB6Z2iIiwKICAiT3BlbkZvbGRlciI6ICLplovllZ/os4fmlpnlpL4iLAogICJEb25lIjogIuWujOaIkCIsCiAgIkNob29zZUNocm9tZVRpdGxlIjogIumBuOaThyBHb29nbGUgQ2hyb21lIiwKICAiQ2hvb3NlQ2hyb21lSGVhZGluZyI6ICLpgbjmk4fopoHplovllZ/nmoQgQ2hyb21lIOWuieijnSIsCiAgIlZhbGlkYXRlZENocm9tZUV4cGxhbmF0aW9uIjogIuS4i+WIl+aHieeUqOeoi+W8j+mDveW3sumAmumBjiBFeHRHdWlkZSDpqZforYnjgIIiLAogICJWYWxpZGF0ZWRDaHJvbWVJbnN0YWxsYXRpb25zIjogIuW3sumpl+itieeahCBHb29nbGUgQ2hyb21lIOWuieijnSIsCiAgIlVzZVNlbGVjdGVkQ2hyb21lIjogIuS9v+eUqOmBuOWPlueahCBDaHJvbWUiLAogICJDaG9vc2VBbm90aGVyRmlsZSI6ICLpgbjmk4flhbbku5bmqpTmoYguLi4iLAogICJTZWxlY3RDaHJvbWVUaXRsZSI6ICLpgbjlj5YgR29vZ2xlIENocm9tZSIsCiAgIkNocm9tZUZpbGVGaWx0ZXIiOiAiR29vZ2xlIENocm9tZSAoY2hyb21lLmV4ZSl8Y2hyb21lLmV4ZXzmh4nnlKjnqIvlvI8gKCouZXhlKXwqLmV4ZSIsCiAgIldoYXRUb0RvIjogIuiZleeQhuaWueW8j++8mnswfSIsCiAgIkVycm9yVGl0bGUiOiAiRXh0R3VpZGUgLSB7MH0iLAogICJNYW5hZ2VkRGV2ZWxvcGVyVG9vbHMiOiAi5L2g55qE57WE57mU5bey5YGc55SoIENocm9tZSDplovnmbzkurrlk6Hlt6XlhbfvvIzplovnmbzkurrlk6HmqKHlvI/kuZ/lj6/og73lj5fliLDpmZDliLbjgIIiLAogICJNYW5hZ2VkRXh0ZW5zaW9ucyI6ICLkvaDnmoTntYTnuZTnpoHmraLlronoo53mk7TlhYXlip/og73vvIzpmaTpnZ7ns7vntbHnrqHnkIblk6HlhYHoqLHjgIIiLAogICJNYW5hZ2VkUG9saWN5Tm90aWNlIjogIuWPl+euoeijnee9ruaUv+etlumAmuefpSIsCiAgIlByZXZpZXdEaXNwbGF5TmFtZSI6ICJFeHRHdWlkZSDnr4TkvosiCn0K'
 }
 
 $script:ExtGuideEmbeddedAssets = @{
@@ -100,6 +100,16 @@ function ConvertFrom-ExtGuideManifest {
             Throw-ExtGuideError -Category 'Configuration' -Message "The manifest value '$propertyName' is not a safe folder name." -Recovery 'Ask the extension publisher to use a short name without path separators or reserved characters.'
         }
     }
+    if ($null -ne $manifest.PSObject.Properties['integrationId'] -and
+        -not [string]::IsNullOrWhiteSpace([string] $manifest.integrationId) -and
+        [string] $manifest.integrationId -notmatch '^[A-Za-z0-9][A-Za-z0-9._-]{2,127}$') {
+        Throw-ExtGuideError -Category 'Configuration' -Message "The manifest value 'integrationId' is not a safe identifier." -Recovery 'Ask the publisher to use 3-128 letters, numbers, dots, underscores, or hyphens.'
+    }
+    if ($null -ne $manifest.PSObject.Properties['extensionVersion'] -and
+        -not [string]::IsNullOrWhiteSpace([string] $manifest.extensionVersion) -and
+        [string] $manifest.extensionVersion -notmatch '^\d+(\.\d+){0,3}$') {
+        Throw-ExtGuideError -Category 'Configuration' -Message "The manifest value 'extensionVersion' is not a valid Chrome extension version." -Recovery 'Ask the publisher to use one to four dot-separated numeric components.'
+    }
     if (-not (Test-ExtGuideRelativePath -Value ([string] $manifest.extensionRoot))) {
         Throw-ExtGuideError -Category 'Configuration' -Message 'The extension root must be a relative path inside the release archive.' -Recovery 'Ask the extension publisher to correct extensionRoot.'
     }
@@ -120,6 +130,15 @@ function ConvertFrom-ExtGuideManifest {
         Throw-ExtGuideError -Category 'Configuration' -Message 'The manifest SHA-256 digest is malformed.' -Recovery 'Ask the extension publisher to publish a 64-character hexadecimal SHA-256 digest.'
     }
     return $manifest
+}
+
+function Get-ExtGuideIntegrationId {
+    param([Parameter(Mandatory = $true)] $Manifest)
+
+    if ($null -ne $Manifest.PSObject.Properties['integrationId'] -and -not [string]::IsNullOrWhiteSpace([string] $Manifest.integrationId)) {
+        return [string] $Manifest.integrationId
+    }
+    return ([string] $Manifest.publisher + '|' + [string] $Manifest.installFolderName)
 }
 
 function ConvertFrom-ExtGuideDigestText {
@@ -213,57 +232,202 @@ function Expand-ExtGuideArchiveSafely {
     }
 }
 
+function Get-ExtGuideExtensionManifest {
+    param(
+        [Parameter(Mandatory = $true)][string] $ExtensionDirectory,
+        [string] $Category = 'Extraction'
+    )
+
+    $manifestPath = Join-Path $ExtensionDirectory 'manifest.json'
+    if (-not (Test-Path -LiteralPath $manifestPath -PathType Leaf)) {
+        Throw-ExtGuideError -Category $Category -Message 'The extension root does not contain manifest.json.' -Recovery 'Choose the correct existing installation or ask the publisher to rebuild the release archive.'
+    }
+    try { $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json -ErrorAction Stop }
+    catch {
+        Throw-ExtGuideError -Category $Category -Message 'The Chrome extension manifest is not valid JSON.' -Recovery 'Choose the correct existing installation or ask the publisher to ship a valid prebuilt extension.' -InnerException $_.Exception
+    }
+    if ([int] $manifest.manifest_version -ne 3 -or [string]::IsNullOrWhiteSpace([string] $manifest.name) -or [string]::IsNullOrWhiteSpace([string] $manifest.version)) {
+        Throw-ExtGuideError -Category $Category -Message 'The files are not a valid prebuilt Manifest V3 extension.' -Recovery 'Choose the correct existing installation or ask the publisher to include a complete built extension.'
+    }
+    return $manifest
+}
+
+function Get-ExtGuideUpdateJournalPath {
+    param([Parameter(Mandatory = $true)][string] $Destination)
+    $fullDestination = [System.IO.Path]::GetFullPath($Destination)
+    return Join-Path (Split-Path -Parent $fullDestination) ('.' + (Split-Path -Leaf $fullDestination) + '.extguide-update.json')
+}
+
+function Write-ExtGuideUpdateJournal {
+    param([Parameter(Mandatory = $true)][string] $Path, [Parameter(Mandatory = $true)] $Journal)
+
+    $temporary = $Path + '.tmp-' + [guid]::NewGuid().ToString('N')
+    try {
+        [System.IO.File]::WriteAllText($temporary, ($Journal | ConvertTo-Json -Depth 5), (New-Object System.Text.UTF8Encoding($true)))
+        Move-Item -LiteralPath $temporary -Destination $Path -Force -ErrorAction Stop
+    }
+    finally {
+        if (Test-Path -LiteralPath $temporary -PathType Leaf) { Remove-Item -LiteralPath $temporary -Force -ErrorAction SilentlyContinue }
+    }
+}
+
+function Test-ExtGuideTransactionPath {
+    param([Parameter(Mandatory = $true)][string] $Path, [Parameter(Mandatory = $true)][string] $Parent, [Parameter(Mandatory = $true)][string] $Leaf, [Parameter(Mandatory = $true)][string] $Kind)
+
+    try { $fullPath = [System.IO.Path]::GetFullPath($Path) } catch { return $false }
+    $expectedParent = [System.IO.Path]::GetFullPath($Parent).TrimEnd('\')
+    if (-not (Split-Path -Parent $fullPath).Equals($expectedParent, [System.StringComparison]::OrdinalIgnoreCase)) { return $false }
+    return (Split-Path -Leaf $fullPath) -match ('^\.' + [regex]::Escape($Leaf) + '\.extguide-' + $Kind + '-[0-9a-f]{32}$')
+}
+
+function Repair-ExtGuideInterruptedUpdate {
+    param([Parameter(Mandatory = $true)][string] $Destination)
+
+    $fullDestination = [System.IO.Path]::GetFullPath($Destination)
+    $journalPath = Get-ExtGuideUpdateJournalPath -Destination $fullDestination
+    if (-not (Test-Path -LiteralPath $journalPath -PathType Leaf)) { return $false }
+    try { $journal = Get-Content -LiteralPath $journalPath -Raw | ConvertFrom-Json -ErrorAction Stop }
+    catch {
+        Throw-ExtGuideError -Category 'Destination' -Message 'ExtGuide found a damaged update recovery record.' -Recovery 'Do not delete extension files. Ask the publisher or administrator to inspect the ExtGuide update files beside the installation.' -InnerException $_.Exception
+    }
+
+    $recordedDestination = [System.IO.Path]::GetFullPath([string] $journal.Destination)
+    $parent = Split-Path -Parent $fullDestination
+    $leaf = Split-Path -Leaf $fullDestination
+    if (-not $recordedDestination.Equals($fullDestination, [System.StringComparison]::OrdinalIgnoreCase) -or
+        -not (Test-ExtGuideTransactionPath -Path ([string] $journal.Staging) -Parent $parent -Leaf $leaf -Kind 'stage') -or
+        -not (Test-ExtGuideTransactionPath -Path ([string] $journal.Backup) -Parent $parent -Leaf $leaf -Kind 'backup')) {
+        Throw-ExtGuideError -Category 'Destination' -Message 'ExtGuide rejected an unsafe update recovery record.' -Recovery 'Ask the publisher or administrator to inspect the installation directory.'
+    }
+
+    $staging = [string] $journal.Staging
+    $backup = [string] $journal.Backup
+    $destinationExists = Test-Path -LiteralPath $fullDestination -PathType Container
+    $backupExists = Test-Path -LiteralPath $backup -PathType Container
+    $stagingExists = Test-Path -LiteralPath $staging -PathType Container
+
+    if (-not $destinationExists -and $backupExists) {
+        Move-Item -LiteralPath $backup -Destination $fullDestination -ErrorAction Stop
+        $destinationExists = $true
+        $backupExists = $false
+    }
+    elseif (-not $destinationExists -and -not $backupExists -and $stagingExists) {
+        Move-Item -LiteralPath $staging -Destination $fullDestination -ErrorAction Stop
+        $destinationExists = $true
+        $stagingExists = $false
+    }
+
+    if ($destinationExists -and $backupExists) { Remove-Item -LiteralPath $backup -Recurse -Force -ErrorAction Stop }
+    if ($destinationExists -and $stagingExists) { Remove-Item -LiteralPath $staging -Recurse -Force -ErrorAction Stop }
+    Remove-Item -LiteralPath $journalPath -Force -ErrorAction Stop
+    return $true
+}
+
+function Read-ExtGuideInstallationReceipt {
+    param([Parameter(Mandatory = $true)][string] $Destination)
+
+    $path = Join-Path $Destination '.extguide-install.json'
+    if (-not (Test-Path -LiteralPath $path -PathType Leaf)) { return $null }
+    try { return Get-Content -LiteralPath $path -Raw | ConvertFrom-Json -ErrorAction Stop }
+    catch {
+        Throw-ExtGuideError -Category 'Destination' -Message 'The existing ExtGuide installation receipt is damaged.' -Recovery 'Choose another folder or ask the publisher to inspect the existing installation.' -InnerException $_.Exception
+    }
+}
+
 function Install-ExtGuideArchive {
     param(
         [Parameter(Mandatory = $true)][byte[]] $ArchiveBytes,
         [Parameter(Mandatory = $true)][string] $Destination,
-        [Parameter(Mandatory = $true)][string] $ExtensionRoot
+        [Parameter(Mandatory = $true)][string] $ExtensionRoot,
+        [string] $IntegrationId,
+        [string] $Publisher,
+        [string] $InstallFolderName,
+        [string] $ArchiveSha256,
+        [string] $ExpectedVersion
     )
 
+    $Destination = [System.IO.Path]::GetFullPath($Destination)
+    $null = New-Item -ItemType Directory -Path (Split-Path -Parent $Destination) -Force -ErrorAction Stop
+    $null = Repair-ExtGuideInterruptedUpdate -Destination $Destination
     $parent = Split-Path -Parent $Destination
     $leaf = Split-Path -Leaf $Destination
     $staging = Join-Path $parent ('.' + $leaf + '.extguide-stage-' + [guid]::NewGuid().ToString('N'))
     $backup = Join-Path $parent ('.' + $leaf + '.extguide-backup-' + [guid]::NewGuid().ToString('N'))
+    $journalPath = Get-ExtGuideUpdateJournalPath -Destination $Destination
     $movedCurrent = $false
     $installed = $false
     $wasUpdate = Test-Path -LiteralPath $Destination
+    $previousVersion = $null
     try {
         $null = New-Item -ItemType Directory -Path $staging -Force -ErrorAction Stop
         Expand-ExtGuideArchiveSafely -ArchiveBytes $ArchiveBytes -StagingDirectory $staging
         $stagedExtensionRoot = [System.IO.Path]::GetFullPath((Join-Path $staging $ExtensionRoot))
-        $manifestPath = Join-Path $stagedExtensionRoot 'manifest.json'
-        if (-not (Test-Path -LiteralPath $manifestPath -PathType Leaf)) {
-            Throw-ExtGuideError -Category 'Extraction' -Message 'The configured extension root does not contain manifest.json.' -Recovery 'Ask the publisher to correct extensionRoot or rebuild the release archive.'
+        $extensionManifest = Get-ExtGuideExtensionManifest -ExtensionDirectory $stagedExtensionRoot
+        if (-not [string]::IsNullOrWhiteSpace($ExpectedVersion) -and [string] $extensionManifest.version -ne $ExpectedVersion) {
+            Throw-ExtGuideError -Category 'Integrity' -Message 'The extension version inside the archive does not match the installer manifest.' -Recovery 'Do not install this archive; ask the publisher to correct the release metadata.'
         }
-        try { $extensionManifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json -ErrorAction Stop }
-        catch {
-            Throw-ExtGuideError -Category 'Extraction' -Message 'The extracted Chrome extension manifest is not valid JSON.' -Recovery 'Ask the publisher to ship a valid prebuilt extension.' -InnerException $_.Exception
+        if ($wasUpdate) {
+            $existingRoot = [System.IO.Path]::GetFullPath((Join-Path $Destination $ExtensionRoot))
+            $existingManifest = Get-ExtGuideExtensionManifest -ExtensionDirectory $existingRoot -Category 'Destination'
+            $previousVersion = [string] $existingManifest.version
+            $receipt = Read-ExtGuideInstallationReceipt -Destination $Destination
+            if ($null -ne $receipt) {
+                if ([int] $receipt.receiptVersion -ne 1 -or
+                    [string] $receipt.integrationId -ne $IntegrationId -or
+                    [string] $receipt.extensionRoot -ne $ExtensionRoot) {
+                    Throw-ExtGuideError -Category 'Destination' -Message 'The selected folder belongs to a different ExtGuide installation.' -Recovery 'Choose the folder previously used for this extension, or choose a new location.'
+                }
+            }
+            elseif (-not ([string] $existingManifest.name).Equals([string] $extensionManifest.name, [System.StringComparison]::Ordinal)) {
+                Throw-ExtGuideError -Category 'Destination' -Message 'The selected folder contains a different unpacked extension.' -Recovery 'Choose the folder previously used for this extension, or choose a new location.'
+            }
         }
-        if ([int] $extensionManifest.manifest_version -ne 3 -or [string]::IsNullOrWhiteSpace([string] $extensionManifest.name) -or [string]::IsNullOrWhiteSpace([string] $extensionManifest.version)) {
-            Throw-ExtGuideError -Category 'Extraction' -Message 'The extracted files are not a valid prebuilt Manifest V3 extension.' -Recovery 'Ask the publisher to include a complete built extension in the release archive.'
+
+        if (-not [string]::IsNullOrWhiteSpace($IntegrationId)) {
+            $receiptPayload = [ordered]@{
+                receiptVersion = 1
+                integrationId = $IntegrationId
+                publisher = $Publisher
+                installFolderName = $InstallFolderName
+                extensionRoot = $ExtensionRoot
+                extensionVersion = [string] $extensionManifest.version
+                archiveSha256 = $ArchiveSha256
+            }
+            [System.IO.File]::WriteAllText((Join-Path $staging '.extguide-install.json'), ($receiptPayload | ConvertTo-Json -Depth 4), (New-Object System.Text.UTF8Encoding($true)))
         }
+
+        $journal = [ordered]@{ journalVersion = 1; Destination = $Destination; Staging = $staging; Backup = $backup; Phase = 'Prepared' }
+        Write-ExtGuideUpdateJournal -Path $journalPath -Journal $journal
         if ($wasUpdate) {
             Move-Item -LiteralPath $Destination -Destination $backup -ErrorAction Stop
             $movedCurrent = $true
+            $journal.Phase = 'OldBackedUp'
+            Write-ExtGuideUpdateJournal -Path $journalPath -Journal $journal
         }
         Move-Item -LiteralPath $staging -Destination $Destination -ErrorAction Stop
         $installed = $true
+        $journal.Phase = 'NewActivated'
+        Write-ExtGuideUpdateJournal -Path $journalPath -Journal $journal
         if ($movedCurrent -and (Test-Path -LiteralPath $backup)) {
             Remove-Item -LiteralPath $backup -Recurse -Force -ErrorAction SilentlyContinue
             $movedCurrent = $false
         }
+        Remove-Item -LiteralPath $journalPath -Force -ErrorAction SilentlyContinue
         $installedRoot = [System.IO.Path]::GetFullPath((Join-Path $Destination $ExtensionRoot))
         $content = @{}
         Get-ChildItem -LiteralPath $installedRoot -File -Recurse | ForEach-Object {
             $relative = $_.FullName.Substring($installedRoot.Length).TrimStart('\')
             $content[$relative] = $_.Length
         }
-        return [pscustomobject]@{ ExtensionRoot = $installedRoot; Content = $content; WasUpdate = $wasUpdate }
+        return [pscustomobject]@{ ExtensionRoot = $installedRoot; Content = $content; WasUpdate = $wasUpdate; PreviousVersion = $previousVersion; InstalledVersion = [string] $extensionManifest.version }
     }
     catch {
         if ($movedCurrent -and -not (Test-Path -LiteralPath $Destination) -and (Test-Path -LiteralPath $backup)) {
             try { Move-Item -LiteralPath $backup -Destination $Destination -ErrorAction Stop } catch { }
             $movedCurrent = $false
+        }
+        if (-not $movedCurrent -and (Test-Path -LiteralPath $Destination) -and (Test-Path -LiteralPath $journalPath)) {
+            Remove-Item -LiteralPath $journalPath -Force -ErrorAction SilentlyContinue
         }
         if ($null -ne $_.Exception.Data['ExtGuideCategory']) { throw }
         Throw-ExtGuideError -Category 'Destination' -Message 'ExtGuide could not replace the current installation safely.' -Recovery 'Close Chrome and any program using the extension files, then retry. The previous installation was preserved.' -InnerException $_.Exception
@@ -370,7 +534,19 @@ $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version 2.0
 '@
     )
-    foreach ($functionName in @('New-ExtGuideException', 'Throw-ExtGuideError', 'Expand-ExtGuideArchiveSafely', 'Install-ExtGuideArchive')) {
+    foreach ($functionName in @(
+        'New-ExtGuideException',
+        'Throw-ExtGuideError',
+        'Get-ExtGuideSha256',
+        'Expand-ExtGuideArchiveSafely',
+        'Get-ExtGuideExtensionManifest',
+        'Get-ExtGuideUpdateJournalPath',
+        'Write-ExtGuideUpdateJournal',
+        'Test-ExtGuideTransactionPath',
+        'Repair-ExtGuideInterruptedUpdate',
+        'Read-ExtGuideInstallationReceipt',
+        'Install-ExtGuideArchive'
+    )) {
         $definition = (Get-Command -Name $functionName -CommandType Function -ErrorAction Stop).Definition
         $parts += "function $functionName {`r`n$definition`r`n}"
     }
@@ -378,12 +554,25 @@ Set-StrictMode -Version 2.0
 $job = Get-Content -LiteralPath $JobPath -Raw | ConvertFrom-Json -ErrorAction Stop
 try {
     [byte[]] $archiveBytes = [System.IO.File]::ReadAllBytes([string] $job.ArchivePath)
-    $installation = Install-ExtGuideArchive -ArchiveBytes $archiveBytes -Destination ([string] $job.Destination) -ExtensionRoot ([string] $job.ExtensionRoot)
+    if ((Get-ExtGuideSha256 -Bytes $archiveBytes) -ne [string] $job.ArchiveSha256) {
+        Throw-ExtGuideError -Category 'Integrity' -Message 'The elevated installer received archive bytes that do not match the verified digest.' -Recovery 'Cancel the installation and run ExtGuide again.'
+    }
+    $installation = Install-ExtGuideArchive `
+        -ArchiveBytes $archiveBytes `
+        -Destination ([string] $job.Destination) `
+        -ExtensionRoot ([string] $job.ExtensionRoot) `
+        -IntegrationId ([string] $job.IntegrationId) `
+        -Publisher ([string] $job.Publisher) `
+        -InstallFolderName ([string] $job.InstallFolderName) `
+        -ArchiveSha256 ([string] $job.ArchiveSha256) `
+        -ExpectedVersion ([string] $job.ExpectedVersion)
     $payload = [ordered]@{
         Succeeded = $true
         ExtensionRoot = [string] $installation.ExtensionRoot
         Content = $installation.Content
         WasUpdate = [bool] $installation.WasUpdate
+        PreviousVersion = [string] $installation.PreviousVersion
+        InstalledVersion = [string] $installation.InstalledVersion
     }
 }
 catch {
@@ -420,13 +609,30 @@ function Start-ExtGuideUnvirtualizedProcess {
     return [int] $result.ProcessId
 }
 
+function Start-ExtGuideElevatedProcess {
+    param(
+        [Parameter(Mandatory = $true)][string] $PowerShellPath,
+        [Parameter(Mandatory = $true)][string] $EncodedCommand
+    )
+
+    try {
+        $process = Start-Process -FilePath $PowerShellPath -ArgumentList @('-NoProfile', '-NonInteractive', '-WindowStyle', 'Hidden', '-ExecutionPolicy', 'Bypass', '-EncodedCommand', $EncodedCommand) -Verb RunAs -WindowStyle Hidden -PassThru -ErrorAction Stop
+        return [int] $process.Id
+    }
+    catch {
+        $exception = New-ExtGuideException -Category 'Destination' -Message 'Windows did not grant administrator permission for the selected installation location.' -Recovery 'Choose another folder, or try again and approve the Windows permission prompt.' -InnerException $_.Exception
+        $exception.Data['ExtGuideElevationDeclined'] = $true
+        throw $exception
+    }
+}
+
 function Remove-ExtGuideInstallJobDirectory {
     param([Parameter(Mandatory = $true)][string] $JobDirectory)
 
     $fullJobDirectory = [System.IO.Path]::GetFullPath($JobDirectory)
     $tempRoot = [System.IO.Path]::GetFullPath([System.IO.Path]::GetTempPath()).TrimEnd('\') + '\'
     $leaf = Split-Path -Leaf $fullJobDirectory
-    if ($fullJobDirectory.StartsWith($tempRoot, [System.StringComparison]::OrdinalIgnoreCase) -and $leaf -match '^ExtGuide-install-[0-9a-f]{32}$') {
+    if ($fullJobDirectory.StartsWith($tempRoot, [System.StringComparison]::OrdinalIgnoreCase) -and $leaf -match '^ExtGuide-(install|settings)-[0-9a-f]{32}$') {
         Remove-Item -LiteralPath $fullJobDirectory -Recurse -Force -ErrorAction SilentlyContinue
     }
 }
@@ -435,7 +641,9 @@ function Install-ExtGuideArchiveOutOfProcess {
     param(
         [Parameter(Mandatory = $true)][byte[]] $ArchiveBytes,
         [Parameter(Mandatory = $true)][string] $Destination,
-        [Parameter(Mandatory = $true)][string] $ExtensionRoot
+        [Parameter(Mandatory = $true)][string] $ExtensionRoot,
+        [Parameter(Mandatory = $true)] $InstallContext,
+        [switch] $Elevated
     )
 
     $jobDirectory = Join-Path ([System.IO.Path]::GetTempPath()) ('ExtGuide-install-' + [guid]::NewGuid().ToString('N'))
@@ -458,6 +666,11 @@ function Install-ExtGuideArchiveOutOfProcess {
             Destination = [System.IO.Path]::GetFullPath($Destination)
             ExtensionRoot = $ExtensionRoot
             ResultPath = $physicalResultPath
+            IntegrationId = [string] $InstallContext.IntegrationId
+            Publisher = [string] $InstallContext.Publisher
+            InstallFolderName = [string] $InstallContext.InstallFolderName
+            ArchiveSha256 = [string] $InstallContext.ArchiveSha256
+            ExpectedVersion = [string] $InstallContext.ExpectedVersion
         }
         [System.IO.File]::WriteAllText($jobPath, ($job | ConvertTo-Json), (New-Object System.Text.UTF8Encoding($true)))
         $physicalJobPath = Get-ExtGuideFinalPath -Path $jobPath
@@ -465,8 +678,13 @@ function Install-ExtGuideArchiveOutOfProcess {
         $workerCommand = "& '$($physicalWorkerPath.Replace("'", "''"))' -JobPath '$($physicalJobPath.Replace("'", "''"))'"
         $encodedCommand = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes($workerCommand))
         $powerShell = Join-Path $env:WINDIR 'System32\WindowsPowerShell\v1.0\powershell.exe'
-        $commandLine = '"{0}" -NoProfile -NonInteractive -WindowStyle Hidden -ExecutionPolicy Bypass -EncodedCommand {1}' -f $powerShell, $encodedCommand
-        $null = Start-ExtGuideUnvirtualizedProcess -CommandLine $commandLine
+        if ($Elevated) {
+            $null = Start-ExtGuideElevatedProcess -PowerShellPath $powerShell -EncodedCommand $encodedCommand
+        }
+        else {
+            $commandLine = '"{0}" -NoProfile -NonInteractive -WindowStyle Hidden -ExecutionPolicy Bypass -EncodedCommand {1}' -f $powerShell, $encodedCommand
+            $null = Start-ExtGuideUnvirtualizedProcess -CommandLine $commandLine
+        }
 
         $deadline = [DateTime]::UtcNow.AddMinutes(5)
         while ([DateTime]::UtcNow -lt $deadline) {
@@ -489,6 +707,8 @@ function Install-ExtGuideArchiveOutOfProcess {
             ExtensionRoot = [string] $result.ExtensionRoot
             Content = $content
             WasUpdate = [bool] $result.WasUpdate
+            PreviousVersion = [string] $result.PreviousVersion
+            InstalledVersion = [string] $result.InstalledVersion
         }
     }
     finally {
@@ -501,19 +721,34 @@ function Install-ExtGuideArchiveForWindows {
         [Parameter(Mandatory = $true)][byte[]] $ArchiveBytes,
         [Parameter(Mandatory = $true)][string] $Destination,
         [Parameter(Mandatory = $true)][string] $ExtensionRoot,
+        $InstallContext,
         [scriptblock] $VirtualizationDetector,
         [scriptblock] $OutOfProcessInstaller,
-        [scriptblock] $InProcessInstaller
+        [scriptblock] $InProcessInstaller,
+        [scriptblock] $ElevatedInstaller
     )
 
+    if ($null -eq $InstallContext) {
+        $InstallContext = [pscustomobject]@{ UseElevation = $false; IntegrationId = ''; Publisher = ''; InstallFolderName = ''; ArchiveSha256 = (Get-ExtGuideSha256 -Bytes $ArchiveBytes); ExpectedVersion = '' }
+    }
     if ($null -eq $VirtualizationDetector) { $VirtualizationDetector = { param($Path) Test-ExtGuidePathVirtualized -Destination $Path } }
-    if ($null -eq $OutOfProcessInstaller) { $OutOfProcessInstaller = { param($Bytes, $Target, $Root) Install-ExtGuideArchiveOutOfProcess -ArchiveBytes $Bytes -Destination $Target -ExtensionRoot $Root } }
-    if ($null -eq $InProcessInstaller) { $InProcessInstaller = { param($Bytes, $Target, $Root) Install-ExtGuideArchive -ArchiveBytes $Bytes -Destination $Target -ExtensionRoot $Root } }
+    if ($null -eq $OutOfProcessInstaller) { $OutOfProcessInstaller = { param($Bytes, $Target, $Root, $Context) Install-ExtGuideArchiveOutOfProcess -ArchiveBytes $Bytes -Destination $Target -ExtensionRoot $Root -InstallContext $Context } }
+    if ($null -eq $ElevatedInstaller) { $ElevatedInstaller = { param($Bytes, $Target, $Root, $Context) Install-ExtGuideArchiveOutOfProcess -ArchiveBytes $Bytes -Destination $Target -ExtensionRoot $Root -InstallContext $Context -Elevated } }
+    if ($null -eq $InProcessInstaller) {
+        $InProcessInstaller = {
+            param($Bytes, $Target, $Root, $Context)
+            Install-ExtGuideArchive -ArchiveBytes $Bytes -Destination $Target -ExtensionRoot $Root -IntegrationId ([string] $Context.IntegrationId) -Publisher ([string] $Context.Publisher) -InstallFolderName ([string] $Context.InstallFolderName) -ArchiveSha256 ([string] $Context.ArchiveSha256) -ExpectedVersion ([string] $Context.ExpectedVersion)
+        }
+    }
+
+    if ([bool] $InstallContext.UseElevation) {
+        return & $ElevatedInstaller $ArchiveBytes $Destination $ExtensionRoot $InstallContext
+    }
 
     if (& $VirtualizationDetector $Destination) {
-        return & $OutOfProcessInstaller $ArchiveBytes $Destination $ExtensionRoot
+        return & $OutOfProcessInstaller $ArchiveBytes $Destination $ExtensionRoot $InstallContext
     }
-    return & $InProcessInstaller $ArchiveBytes $Destination $ExtensionRoot
+    return & $InProcessInstaller $ArchiveBytes $Destination $ExtensionRoot $InstallContext
 }
 
 
@@ -521,11 +756,122 @@ function Get-ExtGuideSettingsPath {
     return Join-Path (Join-Path ([Environment]::GetFolderPath('LocalApplicationData')) 'ExtGuide') 'settings.json'
 }
 
+function Get-ExtGuideSettingsWorkerSource {
+    return @'
+[CmdletBinding()]
+param([Parameter(Mandatory = $true)][string] $JobPath)
+
+$ErrorActionPreference = 'Stop'
+Set-StrictMode -Version 2.0
+$job = Get-Content -LiteralPath $JobPath -Raw | ConvertFrom-Json -ErrorAction Stop
+try {
+    if ([string] $job.Operation -eq 'Read') {
+        $exists = Test-Path -LiteralPath ([string] $job.SettingsPath) -PathType Leaf
+        $settingsJson = if ($exists) { [System.IO.File]::ReadAllText([string] $job.SettingsPath) } else { '' }
+        $payload = [ordered]@{ Succeeded = $true; Exists = $exists; SettingsJson = $settingsJson }
+    }
+    elseif ([string] $job.Operation -eq 'Write') {
+        $settingsPath = [System.IO.Path]::GetFullPath([string] $job.SettingsPath)
+        $directory = Split-Path -Parent $settingsPath
+        $null = New-Item -ItemType Directory -Path $directory -Force -ErrorAction Stop
+        $temporary = $settingsPath + '.tmp-' + [guid]::NewGuid().ToString('N')
+        try {
+            [System.IO.File]::WriteAllText($temporary, [string] $job.SettingsJson, (New-Object System.Text.UTF8Encoding($true)))
+            Move-Item -LiteralPath $temporary -Destination $settingsPath -Force -ErrorAction Stop
+        }
+        finally {
+            if (Test-Path -LiteralPath $temporary -PathType Leaf) { Remove-Item -LiteralPath $temporary -Force -ErrorAction SilentlyContinue }
+        }
+        $payload = [ordered]@{ Succeeded = $true; Exists = $true; SettingsJson = '' }
+    }
+    else {
+        throw "Unsupported settings operation '$($job.Operation)'."
+    }
+}
+catch {
+    $payload = [ordered]@{ Succeeded = $false; Message = $_.Exception.Message }
+}
+
+[System.IO.File]::WriteAllText([string] $job.ResultPath, ($payload | ConvertTo-Json -Depth 5), (New-Object System.Text.UTF8Encoding($true)))
+'@
+}
+
+function Invoke-ExtGuideSettingsIoOutOfProcess {
+    param(
+        [Parameter(Mandatory = $true)][ValidateSet('Read', 'Write')][string] $Operation,
+        [Parameter(Mandatory = $true)][string] $SettingsPath,
+        [string] $SettingsJson = ''
+    )
+
+    $jobDirectory = Join-Path ([System.IO.Path]::GetTempPath()) ('ExtGuide-settings-' + [guid]::NewGuid().ToString('N'))
+    try {
+        $null = New-Item -ItemType Directory -Path $jobDirectory -Force -ErrorAction Stop
+        $workerPath = Join-Path $jobDirectory 'worker.ps1'
+        $jobPath = Join-Path $jobDirectory 'job.json'
+        $resultPath = Join-Path $jobDirectory 'result.json'
+        [System.IO.File]::WriteAllText($workerPath, (Get-ExtGuideSettingsWorkerSource), (New-Object System.Text.UTF8Encoding($true)))
+        [System.IO.File]::WriteAllText($resultPath, '')
+
+        $physicalWorkerPath = Get-ExtGuideFinalPath -Path $workerPath
+        $physicalResultPath = Get-ExtGuideFinalPath -Path $resultPath
+        $job = [ordered]@{
+            Operation = $Operation
+            SettingsPath = [System.IO.Path]::GetFullPath($SettingsPath)
+            SettingsJson = $SettingsJson
+            ResultPath = $physicalResultPath
+        }
+        [System.IO.File]::WriteAllText($jobPath, ($job | ConvertTo-Json -Depth 5), (New-Object System.Text.UTF8Encoding($true)))
+        $physicalJobPath = Get-ExtGuideFinalPath -Path $jobPath
+        $workerCommand = "& '$($physicalWorkerPath.Replace("'", "''"))' -JobPath '$($physicalJobPath.Replace("'", "''"))'"
+        $encodedCommand = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes($workerCommand))
+        $powerShell = Join-Path $env:WINDIR 'System32\WindowsPowerShell\v1.0\powershell.exe'
+        $commandLine = '"{0}" -NoProfile -NonInteractive -WindowStyle Hidden -ExecutionPolicy Bypass -EncodedCommand {1}' -f $powerShell, $encodedCommand
+        $null = Start-ExtGuideUnvirtualizedProcess -CommandLine $commandLine
+
+        $deadline = [DateTime]::UtcNow.AddMinutes(1)
+        while ([DateTime]::UtcNow -lt $deadline) {
+            if ((Get-Item -LiteralPath $resultPath -ErrorAction SilentlyContinue).Length -gt 0) { break }
+            Start-Sleep -Milliseconds 100
+        }
+        if ((Get-Item -LiteralPath $resultPath -ErrorAction SilentlyContinue).Length -le 0) {
+            Throw-ExtGuideError -Category 'Destination' -Message 'The unvirtualized settings operation did not finish in time.' -Recovery 'Run ExtGuide again from a regular Windows PowerShell window.'
+        }
+        $result = Get-Content -LiteralPath $resultPath -Raw | ConvertFrom-Json -ErrorAction Stop
+        if (-not [bool] $result.Succeeded) {
+            Throw-ExtGuideError -Category 'Destination' -Message 'ExtGuide could not access its real per-user settings file.' -Recovery 'Run ExtGuide again from a regular Windows PowerShell window.'
+        }
+        return $result
+    }
+    finally {
+        Remove-ExtGuideInstallJobDirectory -JobDirectory $jobDirectory
+    }
+}
+
+function Test-ExtGuideSettingsPathVirtualized {
+    param([Parameter(Mandatory = $true)][string] $Path)
+    try { return Test-ExtGuidePathVirtualized -Destination $Path }
+    catch { return $false }
+}
+
 function Read-ExtGuideSettings {
     $path = Get-ExtGuideSettingsPath
-    if (-not (Test-Path -LiteralPath $path -PathType Leaf)) { return @{ destinations = @{}; chromePath = $null } }
     try {
-        $raw = Get-Content -LiteralPath $path -Raw | ConvertFrom-Json -ErrorAction Stop
+        $json = $null
+        if (Test-ExtGuideSettingsPathVirtualized -Path $path) {
+            $result = Invoke-ExtGuideSettingsIoOutOfProcess -Operation 'Read' -SettingsPath $path
+            if ([bool] $result.Exists) {
+                $json = [string] $result.SettingsJson
+            }
+            elseif (Test-Path -LiteralPath $path -PathType Leaf) {
+                $json = Get-Content -LiteralPath $path -Raw
+                $null = Invoke-ExtGuideSettingsIoOutOfProcess -Operation 'Write' -SettingsPath $path -SettingsJson $json
+            }
+        }
+        elseif (Test-Path -LiteralPath $path -PathType Leaf) {
+            $json = Get-Content -LiteralPath $path -Raw
+        }
+        if ([string]::IsNullOrWhiteSpace($json)) { return @{ destinations = @{}; chromePath = $null } }
+        $raw = $json | ConvertFrom-Json -ErrorAction Stop
         $destinations = @{}
         if ($null -ne $raw.destinations) {
             foreach ($property in $raw.destinations.PSObject.Properties) { $destinations[$property.Name] = [string] $property.Value }
@@ -539,11 +885,16 @@ function Write-ExtGuideSettings {
     param([Parameter(Mandatory = $true)][hashtable] $Settings)
 
     $path = Get-ExtGuideSettingsPath
+    $json = $Settings | ConvertTo-Json -Depth 5
+    if (Test-ExtGuideSettingsPathVirtualized -Path $path) {
+        $null = Invoke-ExtGuideSettingsIoOutOfProcess -Operation 'Write' -SettingsPath $path -SettingsJson $json
+        return
+    }
     $directory = Split-Path -Parent $path
     $null = New-Item -ItemType Directory -Path $directory -Force
     $temporary = $path + '.tmp-' + [guid]::NewGuid().ToString('N')
     try {
-        $Settings | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath $temporary -Encoding UTF8
+        $json | Set-Content -LiteralPath $temporary -Encoding UTF8
         Move-Item -LiteralPath $temporary -Destination $path -Force
     }
     finally { if (Test-Path -LiteralPath $temporary) { Remove-Item -LiteralPath $temporary -Force -ErrorAction SilentlyContinue } }
@@ -1075,6 +1426,30 @@ function New-ExtGuideButton {
     return $button
 }
 
+function Show-ExtGuideAdministratorPermissionDialog {
+    param([System.Windows.Forms.IWin32Window] $Owner)
+
+    $form = New-ExtGuideForm -Title (Get-ExtGuideText -Key 'AdministratorPermissionTitle')
+    $form.ClientSize = New-Object System.Drawing.Size(620, 260)
+    $heading = New-ExtGuideLabel -Text (Get-ExtGuideText -Key 'AdministratorPermissionTitle') -X 28 -Y 24 -Width 560 -Height 38 -Size 16 -Bold $true
+    $explanation = New-ExtGuideLabel -Text (Get-ExtGuideText -Key 'AdministratorPermissionExplanation') -X 30 -Y 72 -Width 550 -Height 82
+    $elevate = New-ExtGuideButton -Text (Get-ExtGuideText -Key 'UseAdministratorPermission') -X 30 -Y 190 -Width 235 -TabIndex 0
+    $change = New-ExtGuideButton -Text (Get-ExtGuideText -Key 'ChooseAnotherLocation') -X 277 -Y 190 -Width 185 -TabIndex 1
+    $cancel = New-ExtGuideButton -Text (Get-ExtGuideText -Key 'Cancel') -X 474 -Y 190 -Width 110 -TabIndex 2
+    $elevate.BackColor = [System.Drawing.Color]::FromArgb(36, 99, 235)
+    $elevate.ForeColor = [System.Drawing.Color]::White
+    $choice = @{ Value = 'Cancel' }
+    $elevate.Add_Click({ $choice.Value = 'Elevate'; $form.DialogResult = [System.Windows.Forms.DialogResult]::OK })
+    $change.Add_Click({ $choice.Value = 'Change'; $form.DialogResult = [System.Windows.Forms.DialogResult]::OK })
+    $cancel.Add_Click({ $choice.Value = 'Cancel'; $form.DialogResult = [System.Windows.Forms.DialogResult]::Cancel })
+    $form.AcceptButton = $elevate
+    $form.CancelButton = $cancel
+    $form.Controls.AddRange(@($heading, $explanation, $elevate, $change, $cancel))
+    if ($null -ne $Owner) { $null = $form.ShowDialog($Owner) } else { $null = $form.ShowDialog() }
+    $form.Dispose()
+    return [string] $choice.Value
+}
+
 function Get-ExtGuideAssetImage {
     param([Parameter(Mandatory = $true)][string] $Name)
 
@@ -1110,7 +1485,7 @@ function Show-ExtGuideDestinationWindow {
 
     $form = New-ExtGuideForm -Title (Get-ExtGuideText -Key 'InstallTitle' -Arguments @([string] $Manifest.displayName))
     $initialDestination = if ($RememberedDestination) { $RememberedDestination } else { $RecommendedDestination }
-    $state = @{ Destination = $initialDestination; IsCustom = [bool] $RememberedDestination }
+    $state = @{ Destination = $initialDestination; IsCustom = [bool] $RememberedDestination; UseElevation = $false; IsUpdate = $false }
     $heading = New-ExtGuideLabel -Text (Get-ExtGuideText -Key 'InstallTitle' -Arguments @([string] $Manifest.displayName)) -X 28 -Y 24 -Width 560 -Height 40 -Size 18 -Bold $true
     $explanation = New-ExtGuideLabel -Text (Get-ExtGuideText -Key 'InstallExplanation') -X 30 -Y 76 -Width 550 -Height 52
     $pathLabel = New-ExtGuideLabel -Text (Get-ExtGuideText -Key 'FinalExtensionLocation') -X 30 -Y 145 -Width 300 -Height 25 -Bold $true
@@ -1126,21 +1501,60 @@ function Show-ExtGuideDestinationWindow {
     $cancelButton = New-ExtGuideButton -Text (Get-ExtGuideText -Key 'Cancel') -X 278 -Y 430 -Width 100 -TabIndex 3
     $installButton.BackColor = [System.Drawing.Color]::FromArgb(36, 99, 235)
     $installButton.ForeColor = [System.Drawing.Color]::White
-    $installButton.DialogResult = [System.Windows.Forms.DialogResult]::OK
     $cancelButton.DialogResult = [System.Windows.Forms.DialogResult]::Cancel
     $status = New-ExtGuideLabel -Text (Get-ExtGuideText -Key 'DestinationHint') -X 30 -Y 286 -Width 550 -Height 70
 
-    $changeHandler = {
+    $refreshOperation = {
+        $candidateRoot = Join-Path $state.Destination ([string] $Manifest.extensionRoot)
+        $state.IsUpdate = Test-Path -LiteralPath (Join-Path $candidateRoot 'manifest.json') -PathType Leaf
+        if ($state.IsUpdate) {
+            $form.Text = Get-ExtGuideText -Key 'UpdateTitle' -Arguments @([string] $Manifest.displayName)
+            $heading.Text = Get-ExtGuideText -Key 'UpdateTitle' -Arguments @([string] $Manifest.displayName)
+            $explanation.Text = Get-ExtGuideText -Key 'UpdateExplanation'
+            $installButton.Text = Get-ExtGuideText -Key 'UpdateExtension'
+            $installButton.AccessibleName = $installButton.Text
+        }
+        else {
+            $form.Text = Get-ExtGuideText -Key 'InstallTitle' -Arguments @([string] $Manifest.displayName)
+            $heading.Text = Get-ExtGuideText -Key 'InstallTitle' -Arguments @([string] $Manifest.displayName)
+            $explanation.Text = Get-ExtGuideText -Key 'InstallExplanation'
+            $installButton.Text = Get-ExtGuideText -Key 'InstallExtension'
+            $installButton.AccessibleName = $installButton.Text
+        }
+    }
+    $chooseFolder = {
         $chooser = New-Object System.Windows.Forms.FolderBrowserDialog
         $chooser.Description = Get-ExtGuideText -Key 'ChooseBaseFolder'
         if ($chooser.ShowDialog($form) -eq [System.Windows.Forms.DialogResult]::OK) {
             $state.Destination = Join-Path $chooser.SelectedPath ([string] $Manifest.installFolderName)
             $state.IsCustom = $true
             $pathBox.Text = $state.Destination
+            & $refreshOperation
         }
         $chooser.Dispose()
     }
+    $changeHandler = { & $chooseFolder }
+    $installHandler = {
+        if (Test-ExtGuideDestinationWritable -Destination $state.Destination) {
+            $state.UseElevation = $false
+            $form.DialogResult = [System.Windows.Forms.DialogResult]::OK
+            return
+        }
+        $decision = Show-ExtGuideAdministratorPermissionDialog -Owner $form
+        if ($decision -eq 'Elevate') {
+            $state.UseElevation = $true
+            $form.DialogResult = [System.Windows.Forms.DialogResult]::OK
+        }
+        elseif ($decision -eq 'Change') {
+            & $chooseFolder
+        }
+        else {
+            $form.DialogResult = [System.Windows.Forms.DialogResult]::Cancel
+        }
+    }
     $changeButton.Add_Click($changeHandler)
+    $installButton.Add_Click($installHandler)
+    & $refreshOperation
     $form.AcceptButton = $installButton
     $form.CancelButton = $cancelButton
     $form.Controls.AddRange(@($heading, $explanation, $pathLabel, $pathBox, $changeButton, $cancelButton, $installButton, $status))
@@ -1158,11 +1572,44 @@ function Show-ExtGuideDestinationWindow {
     [System.Windows.Forms.Application]::DoEvents()
     $sessionKey = [string] $Manifest.displayName
     $script:ExtGuideUiSessions[$sessionKey] = $form
-    return [pscustomobject]@{ Cancelled = $false; Destination = $state.Destination; IsCustom = $state.IsCustom }
+    return [pscustomobject]@{ Cancelled = $false; Destination = $state.Destination; IsCustom = $state.IsCustom; UseElevation = $state.UseElevation; IsUpdate = $state.IsUpdate }
+}
+
+function Select-ExtGuideFallbackDestination {
+    param($Manifest)
+
+    Initialize-ExtGuideWinForms
+    while ($true) {
+        $chooser = New-Object System.Windows.Forms.FolderBrowserDialog
+        $chooser.Description = Get-ExtGuideText -Key 'ChooseWritableBaseFolder'
+        $dialogResult = $chooser.ShowDialog()
+        $selectedPath = $chooser.SelectedPath
+        $chooser.Dispose()
+        if ($dialogResult -ne [System.Windows.Forms.DialogResult]::OK) { return $null }
+
+        $destination = Join-Path $selectedPath ([string] $Manifest.installFolderName)
+        if (Test-ExtGuideDestinationWritable -Destination $destination) {
+            return [pscustomobject]@{ Destination = $destination; UseElevation = $false }
+        }
+        $decision = Show-ExtGuideAdministratorPermissionDialog
+        if ($decision -eq 'Elevate') {
+            return [pscustomobject]@{ Destination = $destination; UseElevation = $true }
+        }
+        if ($decision -eq 'Cancel') { return $null }
+    }
+}
+
+function Close-ExtGuideUiSession {
+    param([string] $DisplayName)
+
+    if (-not $script:ExtGuideUiSessions.ContainsKey($DisplayName)) { return }
+    $form = $script:ExtGuideUiSessions[$DisplayName]
+    if ($null -ne $form -and -not $form.IsDisposed) { $form.Close(); $form.Dispose() }
+    $script:ExtGuideUiSessions.Remove($DisplayName)
 }
 
 function Set-ExtGuideGuidanceControls {
-    param([System.Windows.Forms.Form] $Form, [string] $DisplayName, [string] $InstalledRoot, [string] $ChromeExecutable, [string] $PolicyNotice)
+    param([System.Windows.Forms.Form] $Form, [string] $DisplayName, [string] $InstalledRoot, [string] $ChromeExecutable, [string] $PolicyNotice, [bool] $WasUpdate = $false)
 
     $Form.SuspendLayout()
     foreach ($control in @($Form.Controls)) {
@@ -1172,24 +1619,23 @@ function Set-ExtGuideGuidanceControls {
         }
     }
     $Form.Controls.Clear()
-    $Form.ClientSize = New-Object System.Drawing.Size(1160, 520)
-    $Form.Text = Get-ExtGuideText -Key 'FinishTitle' -Arguments @($DisplayName)
+    $Form.ClientSize = if ($WasUpdate) { New-Object System.Drawing.Size(620, 520) } else { New-Object System.Drawing.Size(1160, 520) }
+    $Form.Text = Get-ExtGuideText -Key $(if ($WasUpdate) { 'UpdateFinishTitle' } else { 'FinishTitle' }) -Arguments @($DisplayName)
     $Form.TopMost = $false
-    $heading = New-ExtGuideLabel -Text (Get-ExtGuideText -Key 'FinishHeading') -X 28 -Y 20 -Width 1100 -Height 42 -Size 18 -Bold $true
-    $subheading = New-ExtGuideLabel -Text (Get-ExtGuideText -Key 'FinishSubheading') -X 30 -Y 68 -Width 1090 -Height 42
-    $steps = @(
-        (Get-ExtGuideText -Key 'Step1'),
-        (Get-ExtGuideText -Key 'Step2'),
-        (Get-ExtGuideText -Key 'Step3'),
-        (Get-ExtGuideText -Key 'Step4'),
-        (Get-ExtGuideText -Key 'Step5')
-    )
+    $heading = New-ExtGuideLabel -Text (Get-ExtGuideText -Key $(if ($WasUpdate) { 'UpdateFinishHeading' } else { 'FinishHeading' })) -X 28 -Y 20 -Width $(if ($WasUpdate) { 560 } else { 1100 }) -Height 42 -Size 18 -Bold $true
+    $subheading = New-ExtGuideLabel -Text (Get-ExtGuideText -Key $(if ($WasUpdate) { 'UpdateFinishSubheading' } else { 'FinishSubheading' })) -X 30 -Y 68 -Width $(if ($WasUpdate) { 550 } else { 1090 }) -Height 42
+    $steps = if ($WasUpdate) {
+        @((Get-ExtGuideText -Key 'UpdateStep1'), (Get-ExtGuideText -Key 'UpdateStep2'), (Get-ExtGuideText -Key 'UpdateStep3'))
+    }
+    else {
+        @((Get-ExtGuideText -Key 'Step1'), (Get-ExtGuideText -Key 'Step2'), (Get-ExtGuideText -Key 'Step3'), (Get-ExtGuideText -Key 'Step4'), (Get-ExtGuideText -Key 'Step5'))
+    }
     $y = 120
     foreach ($step in $steps) {
         $Form.Controls.Add((New-ExtGuideLabel -Text $step -X 42 -Y $y -Width 530 -Height 34 -Size 10.5))
         $y += 38
     }
-    $guideImage = Get-ExtGuideAssetImage -Name (Get-ExtGuideVisualGuideAssetName)
+    $guideImage = if ($WasUpdate) { $null } else { Get-ExtGuideAssetImage -Name (Get-ExtGuideVisualGuideAssetName) }
     $guidePicture = $null
     $guideCaption = $null
     if ($null -ne $guideImage) {
@@ -1225,7 +1671,7 @@ function Set-ExtGuideGuidanceControls {
     $Form.Controls.AddRange(@($heading, $subheading, $pathLabel, $pathBox, $copy, $reopen, $openFolder, $done))
     if ($null -ne $guidePicture) { $Form.Controls.AddRange(@($guidePicture, $guideCaption)) }
     if ($PolicyNotice) {
-        $notice = New-ExtGuideLabel -Text $PolicyNotice -X 30 -Y 452 -Width 1100 -Height 55 -Size 8.5
+        $notice = New-ExtGuideLabel -Text $PolicyNotice -X 30 -Y 452 -Width $(if ($WasUpdate) { 550 } else { 1100 }) -Height 55 -Size 8.5
         $notice.ForeColor = [System.Drawing.Color]::FromArgb(146, 64, 14)
         $notice.AccessibleName = Get-ExtGuideText -Key 'ManagedPolicyNotice'
         $Form.Controls.Add($notice)
@@ -1235,12 +1681,12 @@ function Set-ExtGuideGuidanceControls {
 }
 
 function Show-ExtGuideGuidanceWindow {
-    param([string] $DisplayName, [string] $InstalledRoot, [string] $ChromeExecutable)
+    param([string] $DisplayName, [string] $InstalledRoot, [string] $ChromeExecutable, [bool] $WasUpdate = $false)
 
     Initialize-ExtGuideWinForms
     $form = $script:ExtGuideUiSessions[$DisplayName]
     if ($null -eq $form -or $form.IsDisposed) { $form = New-ExtGuideForm -Title (Get-ExtGuideText -Key 'FinishTitle' -Arguments @($DisplayName)) }
-    Set-ExtGuideGuidanceControls -Form $form -DisplayName $DisplayName -InstalledRoot $InstalledRoot -ChromeExecutable $ChromeExecutable -PolicyNotice (Get-ExtGuideManagedPolicyNotice)
+    Set-ExtGuideGuidanceControls -Form $form -DisplayName $DisplayName -InstalledRoot $InstalledRoot -ChromeExecutable $ChromeExecutable -PolicyNotice (Get-ExtGuideManagedPolicyNotice) -WasUpdate $WasUpdate
     $form.TopMost = $true
     if (-not $form.Visible) { $form.Show() }
     $form.BringToFront()
@@ -1252,7 +1698,7 @@ function Show-ExtGuideGuidanceWindow {
         Start-Sleep -Milliseconds 40
     }
     $script:ExtGuideUiSessions.Remove($DisplayName)
-    return [pscustomobject]@{ State = 'GuidanceReady'; DisplayName = $DisplayName; InstalledRoot = $InstalledRoot }
+    return [pscustomobject]@{ State = 'GuidanceReady'; DisplayName = $DisplayName; InstalledRoot = $InstalledRoot; WasUpdate = $WasUpdate }
 }
 
 function Select-ExtGuideChromeExecutable {
@@ -1378,11 +1824,13 @@ function New-ExtGuideWindowsHostAdapter {
         FetchBytes = { param($Uri) Invoke-ExtGuideDownload -Uri $Uri -AsBytes }
         GetLocalApplicationDataPath = { [Environment]::GetFolderPath('LocalApplicationData') }
         ChooseDestination = { param($Manifest, $Recommended, $Remembered) Show-ExtGuideDestinationWindow -Manifest $Manifest -RecommendedDestination $Recommended -RememberedDestination $Remembered }
+        ChooseFallbackDestination = { param($Manifest) Select-ExtGuideFallbackDestination -Manifest $Manifest }
+        CloseInstallSession = { param($DisplayName) Close-ExtGuideUiSession -DisplayName $DisplayName }
         DestinationExists = { param($Destination) Test-Path -LiteralPath $Destination -PathType Container }
         TestDestinationWritable = { param($Destination) Test-ExtGuideDestinationWritable -Destination $Destination }
         GetRememberedDestination = { param($Manifest) Get-ExtGuideRememberedDestination -Manifest $Manifest }
         RememberDestination = { param($Manifest, $Destination) Set-ExtGuideRememberedDestination -Manifest $Manifest -Destination $Destination }
-        WriteExtension = { param($ArchiveBytes, $Destination, $ExtensionRoot) Install-ExtGuideArchiveForWindows -ArchiveBytes $ArchiveBytes -Destination $Destination -ExtensionRoot $ExtensionRoot }
+        WriteExtension = { param($ArchiveBytes, $Destination, $ExtensionRoot, $InstallContext) Install-ExtGuideArchiveForWindows -ArchiveBytes $ArchiveBytes -Destination $Destination -ExtensionRoot $ExtensionRoot -InstallContext $InstallContext }
         GetRunningChromeCandidates = { Get-ExtGuideRunningChromeCandidates }
         GetRegisteredChromeCandidates = { Get-ExtGuideRegisteredChromeCandidates }
         GetRememberedChrome = { Get-ExtGuideRememberedChrome }
@@ -1391,7 +1839,7 @@ function New-ExtGuideWindowsHostAdapter {
         RememberChrome = { param($Path) Set-ExtGuideRememberedChrome -Path $Path }
         SetClipboard = { param($Text) Initialize-ExtGuideWinForms; [System.Windows.Forms.Clipboard]::SetText($Text) }
         LaunchChrome = { param($Executable, $Uri) Open-ExtGuideChromeExtensionsPage -Executable $Executable -Uri $Uri }
-        ShowGuide = { param($DisplayName, $InstalledRoot, $ChromeExecutable) Show-ExtGuideGuidanceWindow -DisplayName $DisplayName -InstalledRoot $InstalledRoot -ChromeExecutable $ChromeExecutable }
+        ShowGuide = { param($DisplayName, $InstalledRoot, $ChromeExecutable, $WasUpdate) Show-ExtGuideGuidanceWindow -DisplayName $DisplayName -InstalledRoot $InstalledRoot -ChromeExecutable $ChromeExecutable -WasUpdate ([bool] $WasUpdate) }
         ShowError = { param($Failure) Show-ExtGuideFailureWindow -Failure $Failure }
         LogFailure = { param($Failure) Write-ExtGuideSafeLog -Category $Failure.Category }
     }
@@ -1489,13 +1937,13 @@ function Invoke-ExtGuideBootstrap {
         $remembered = Invoke-ExtGuideOptionalHostOperation -Adapter $adapter -Operation 'GetRememberedDestination' -Arguments @($manifest)
         if ($remembered) {
             $rememberedExists = Invoke-ExtGuideOptionalHostOperation -Adapter $adapter -Operation 'DestinationExists' -Arguments @([string] $remembered) -Default $false
-            $rememberedWritable = Invoke-ExtGuideOptionalHostOperation -Adapter $adapter -Operation 'TestDestinationWritable' -Arguments @([string] $remembered) -Default $true
-            if (-not $rememberedExists -or -not $rememberedWritable) { $remembered = $null }
+            if (-not $rememberedExists) { $remembered = $null }
         }
         $choice = Invoke-ExtGuideOptionalHostOperation -Adapter $adapter -Operation 'ChooseDestination' -Arguments @($manifest, $recommended, $remembered) -Default ([pscustomobject]@{ Cancelled = $false; Destination = $recommended; IsCustom = $false })
         if ($choice.Cancelled) { return [pscustomobject]@{ Status = 'Cancelled'; Destination = $recommended } }
         $destination = [System.IO.Path]::GetFullPath([string] $choice.Destination)
-        if (-not (Invoke-ExtGuideOptionalHostOperation -Adapter $adapter -Operation 'TestDestinationWritable' -Arguments @($destination) -Default $true)) {
+        $useElevation = $null -ne $choice.PSObject.Properties['UseElevation'] -and [bool] $choice.UseElevation
+        if (-not (Invoke-ExtGuideOptionalHostOperation -Adapter $adapter -Operation 'TestDestinationWritable' -Arguments @($destination) -Default $true) -and -not $useElevation) {
             Throw-ExtGuideError -Category 'Destination' -Message 'The selected installation location is not writable.' -Recovery 'Choose another folder where your Windows account can create and replace files.'
         }
 
@@ -1516,7 +1964,40 @@ function Invoke-ExtGuideBootstrap {
             Throw-ExtGuideError -Category 'Integrity' -Message 'The downloaded archive does not match its declared SHA-256 digest.' -Recovery 'Do not use this archive. Retry once, then ask the publisher to verify the release digest.'
         }
 
-        $installation = Invoke-ExtGuideHostOperation -Adapter $adapter -Operation 'WriteExtension' -Arguments @($archiveBytes, $destination, $manifest.extensionRoot)
+        $expectedVersion = if ($null -ne $manifest.PSObject.Properties['extensionVersion']) { [string] $manifest.extensionVersion } else { '' }
+        $installContext = [pscustomobject]@{
+            UseElevation = $useElevation
+            IntegrationId = Get-ExtGuideIntegrationId -Manifest $manifest
+            Publisher = [string] $manifest.publisher
+            InstallFolderName = [string] $manifest.installFolderName
+            ArchiveSha256 = $expectedSha256
+            ExpectedVersion = $expectedVersion
+        }
+        while ($true) {
+            try {
+                $installation = Invoke-ExtGuideHostOperation -Adapter $adapter -Operation 'WriteExtension' -Arguments @($archiveBytes, $destination, $manifest.extensionRoot, $installContext)
+                break
+            }
+            catch {
+                if (-not [bool] $_.Exception.Data['ExtGuideElevationDeclined']) { throw }
+                $fallbackChoice = Invoke-ExtGuideOptionalHostOperation -Adapter $adapter -Operation 'ChooseFallbackDestination' -Arguments @($manifest)
+                if ($null -eq $fallbackChoice) {
+                    $null = Invoke-ExtGuideOptionalHostOperation -Adapter $adapter -Operation 'CloseInstallSession' -Arguments @([string] $manifest.displayName)
+                    return [pscustomobject]@{ Status = 'Cancelled'; Destination = $destination }
+                }
+                if ($null -ne $fallbackChoice.PSObject.Properties['Destination']) {
+                    $destination = [System.IO.Path]::GetFullPath([string] $fallbackChoice.Destination)
+                    $installContext.UseElevation = $null -ne $fallbackChoice.PSObject.Properties['UseElevation'] -and [bool] $fallbackChoice.UseElevation
+                }
+                else {
+                    $destination = [System.IO.Path]::GetFullPath([string] $fallbackChoice)
+                    $installContext.UseElevation = $false
+                }
+                if (-not (Invoke-ExtGuideOptionalHostOperation -Adapter $adapter -Operation 'TestDestinationWritable' -Arguments @($destination) -Default $true) -and -not [bool] $installContext.UseElevation) {
+                    Throw-ExtGuideError -Category 'Destination' -Message 'The replacement installation location is not writable.' -Recovery 'Choose another folder or request administrator permission.'
+                }
+            }
+        }
         $null = Invoke-ExtGuideOptionalHostOperation -Adapter $adapter -Operation 'RememberDestination' -Arguments @($manifest, $destination)
         $chromeExecutable = Resolve-ExtGuideChrome -Adapter $adapter
         $installedRoot = $installation.ExtensionRoot
@@ -1526,7 +2007,7 @@ function Invoke-ExtGuideBootstrap {
         $extensionsUri = 'chrome://extensions/'
         try { $null = Invoke-ExtGuideHostOperation -Adapter $adapter -Operation 'LaunchChrome' -Arguments @($chromeExecutable, $extensionsUri) }
         catch { Throw-ExtGuideError -Category 'Launch' -Message 'ExtGuide installed the extension but could not open Chrome.' -Recovery 'Open Google Chrome and navigate to chrome://extensions manually.' -InnerException $_.Exception }
-        $guide = Invoke-ExtGuideHostOperation -Adapter $adapter -Operation 'ShowGuide' -Arguments @($manifest.displayName, $installedRoot, $chromeExecutable)
+        $guide = Invoke-ExtGuideHostOperation -Adapter $adapter -Operation 'ShowGuide' -Arguments @($manifest.displayName, $installedRoot, $chromeExecutable, [bool] $installation.WasUpdate)
 
         return [pscustomobject]@{
             Status = $guide.State
@@ -1534,6 +2015,8 @@ function Invoke-ExtGuideBootstrap {
             InstalledRoot = $installedRoot
             InstalledContent = $installation.Content
             WasUpdate = [bool] $installation.WasUpdate
+            PreviousVersion = if ($null -ne $installation.PSObject.Properties['PreviousVersion']) { [string] $installation.PreviousVersion } else { '' }
+            InstalledVersion = if ($null -ne $installation.PSObject.Properties['InstalledVersion']) { [string] $installation.InstalledVersion } else { '' }
             ClipboardPath = $installedRoot
             ChromeExecutable = $chromeExecutable
             LaunchUri = $extensionsUri

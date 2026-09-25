@@ -17,6 +17,10 @@ Describe 'ExtGuide secure workflow' {
 
         $first.Status | Should Be 'GuidanceReady'
         $first.WasUpdate | Should Be $false
+        $first.InstalledVersion | Should Be '1.0.0'
+        $receipt = Get-Content -LiteralPath (Join-Path $destination '.extguide-install.json') -Raw | ConvertFrom-Json
+        $receipt.integrationId | Should Be 'ExtGuide|SampleExtension'
+        $receipt.extensionVersion | Should Be '1.0.0'
         (Get-Content -LiteralPath (Join-Path $first.InstalledRoot 'background.js') -Raw) | Should Be 'old-content'
 
         $archiveV2 = New-TestExtensionArchive -Version '2.0.0' -Background 'new-content'
@@ -26,8 +30,136 @@ Describe 'ExtGuide secure workflow' {
 
         $second.Status | Should Be 'GuidanceReady'
         $second.WasUpdate | Should Be $true
+        $second.PreviousVersion | Should Be '1.0.0'
+        $second.InstalledVersion | Should Be '2.0.0'
+        $second.Guide.WasUpdate | Should Be $true
         $second.InstalledRoot | Should Be $first.InstalledRoot
         (Get-Content -LiteralPath (Join-Path $second.InstalledRoot 'background.js') -Raw) | Should Be 'new-content'
+    }
+
+    It 'refuses to replace a destination whose receipt belongs to another integration' {
+        $archive = New-TestExtensionArchive -Version '1.0.0'
+        $destination = Join-Path $TestDrive 'IdentityCase\SampleExtension'
+        $firstAdapter = New-WorkflowTestAdapter -ManifestJson (New-TestInstallerManifest -ArchiveBytes $archive -IntegrationId 'example.first') -ArchiveBytes $archive -LocalApplicationData $TestDrive -Destination $destination -UseRealInstaller
+        Set-WorkflowTestAdapter -Adapter $firstAdapter
+        $null = Invoke-ExtGuideBootstrap -ManifestUri $manifestUri
+
+        $secondAdapter = New-WorkflowTestAdapter -ManifestJson (New-TestInstallerManifest -ArchiveBytes $archive -IntegrationId 'example.second') -ArchiveBytes $archive -LocalApplicationData $TestDrive -Destination $destination -UseRealInstaller
+        Set-WorkflowTestAdapter -Adapter $secondAdapter
+        $result = Invoke-ExtGuideBootstrap -ManifestUri $manifestUri
+
+        $result.Status | Should Be 'Failed'
+        $result.Category | Should Be 'Destination'
+        (Get-Content -LiteralPath (Join-Path $destination '.extguide-install.json') -Raw | ConvertFrom-Json).integrationId | Should Be 'example.first'
+    }
+
+    It 'keeps a remembered protected destination and requests scoped elevation' {
+        $archive = New-TestExtensionArchive
+        $destination = Join-Path $TestDrive 'Protected\SampleExtension'
+        $adapter = New-WorkflowTestAdapter -ManifestJson (New-TestInstallerManifest -ArchiveBytes $archive) -ArchiveBytes $archive -LocalApplicationData $TestDrive
+        $adapter.State.RememberedSeen = $null
+        $adapter.State.InstallContext = $null
+        $adapter.GetRememberedDestination = { param($Manifest) $destination }.GetNewClosure()
+        $adapter.DestinationExists = { param($Path) $true }
+        $adapter.TestDestinationWritable = { param($Path) $false }
+        $adapter.ChooseDestination = {
+            param($Manifest, $Recommended, $Remembered)
+            $adapter.State.RememberedSeen = $Remembered
+            [pscustomobject]@{ Cancelled = $false; Destination = $Remembered; IsCustom = $true; UseElevation = $true }
+        }.GetNewClosure()
+        $adapter.WriteExtension = {
+            param($Bytes, $Target, $Root, $Context)
+            $adapter.State.InstallContext = $Context
+            [pscustomobject]@{ ExtensionRoot = Join-Path $Target $Root; Content = @{}; WasUpdate = $true; PreviousVersion = '1.0.0'; InstalledVersion = '2.0.0' }
+        }.GetNewClosure()
+        Set-WorkflowTestAdapter -Adapter $adapter
+
+        $result = Invoke-ExtGuideBootstrap -ManifestUri $manifestUri
+
+        $result.Status | Should Be 'GuidanceReady'
+        $adapter.State.RememberedSeen | Should Be $destination
+        $adapter.State.InstallContext.UseElevation | Should Be $true
+        $adapter.State.InstallContext.ArchiveSha256 | Should Be (Get-TestSha256 -Bytes $archive)
+    }
+
+    It 'offers another folder when the Windows elevation prompt is declined' {
+        $archive = New-TestExtensionArchive
+        $protected = Join-Path $TestDrive 'ProtectedDeclined\SampleExtension'
+        $fallback = Join-Path $TestDrive 'WritableFallback\SampleExtension'
+        $adapter = New-WorkflowTestAdapter -ManifestJson (New-TestInstallerManifest -ArchiveBytes $archive) -ArchiveBytes $archive -LocalApplicationData $TestDrive
+        $adapter.State.WriteAttempts = 0
+        $adapter.ChooseDestination = { param($Manifest, $Recommended, $Remembered) [pscustomobject]@{ Cancelled = $false; Destination = $protected; IsCustom = $true; UseElevation = $true } }.GetNewClosure()
+        $adapter.TestDestinationWritable = { param($Path) $Path -eq $fallback }.GetNewClosure()
+        $adapter.ChooseFallbackDestination = { param($Manifest) $fallback }.GetNewClosure()
+        $adapter.WriteExtension = {
+            param($Bytes, $Target, $Root, $Context)
+            $adapter.State.WriteAttempts++
+            if ($adapter.State.WriteAttempts -eq 1) {
+                $exception = New-Object System.Exception('UAC cancelled')
+                $exception.Data['ExtGuideElevationDeclined'] = $true
+                throw $exception
+            }
+            [pscustomobject]@{ ExtensionRoot = Join-Path $Target $Root; Content = @{}; WasUpdate = $false; PreviousVersion = ''; InstalledVersion = '1.0.0' }
+        }.GetNewClosure()
+        Set-WorkflowTestAdapter -Adapter $adapter
+
+        $result = Invoke-ExtGuideBootstrap -ManifestUri $manifestUri
+
+        $result.Status | Should Be 'GuidanceReady'
+        $result.Destination | Should Be $fallback
+        $adapter.State.WriteAttempts | Should Be 2
+        $adapter.State.DestinationRemembered | Should Be $fallback
+    }
+
+    It 'offers administrator permission again when the same protected location is reselected' {
+        $archive = New-TestExtensionArchive
+        $protected = Join-Path $TestDrive 'ProtectedRetried\SampleExtension'
+        $adapter = New-WorkflowTestAdapter -ManifestJson (New-TestInstallerManifest -ArchiveBytes $archive) -ArchiveBytes $archive -LocalApplicationData $TestDrive
+        $adapter.State.WriteAttempts = 0
+        $adapter.State.ElevationChoices = @()
+        $adapter.ChooseDestination = { param($Manifest, $Recommended, $Remembered) [pscustomobject]@{ Cancelled = $false; Destination = $protected; IsCustom = $true; UseElevation = $true } }.GetNewClosure()
+        $adapter.TestDestinationWritable = { param($Path) $false }
+        $adapter.ChooseFallbackDestination = { param($Manifest) [pscustomobject]@{ Destination = $protected; UseElevation = $true } }.GetNewClosure()
+        $adapter.WriteExtension = {
+            param($Bytes, $Target, $Root, $Context)
+            $adapter.State.WriteAttempts++
+            $adapter.State.ElevationChoices = @($adapter.State.ElevationChoices) + [bool] $Context.UseElevation
+            if ($adapter.State.WriteAttempts -eq 1) {
+                $exception = New-Object System.Exception('UAC cancelled')
+                $exception.Data['ExtGuideElevationDeclined'] = $true
+                throw $exception
+            }
+            [pscustomobject]@{ ExtensionRoot = Join-Path $Target $Root; Content = @{}; WasUpdate = $true; PreviousVersion = '1.0.0'; InstalledVersion = '1.0.0' }
+        }.GetNewClosure()
+        Set-WorkflowTestAdapter -Adapter $adapter
+
+        $result = Invoke-ExtGuideBootstrap -ManifestUri $manifestUri
+
+        $result.Status | Should Be 'GuidanceReady'
+        $result.Destination | Should Be $protected
+        $adapter.State.WriteAttempts | Should Be 2
+        $adapter.State.ElevationChoices | Should Be @($true, $true)
+    }
+
+    It 'repairs an interrupted swap by restoring the preserved installation' {
+        $parent = Join-Path $TestDrive 'RecoveryCase'
+        $destination = Join-Path $parent 'SampleExtension'
+        $backup = Join-Path $parent '.SampleExtension.extguide-backup-11111111111111111111111111111111'
+        $staging = Join-Path $parent '.SampleExtension.extguide-stage-22222222222222222222222222222222'
+        $null = New-Item -ItemType Directory -Path (Join-Path $backup 'extension') -Force
+        Set-Content -LiteralPath (Join-Path $backup 'extension\manifest.json') -Value '{ "manifest_version": 3, "name": "Sample", "version": "1.0.0" }'
+        $null = New-Item -ItemType Directory -Path $staging -Force
+        $journalPath = Join-Path $parent '.SampleExtension.extguide-update.json'
+        [pscustomobject]@{ journalVersion = 1; Destination = $destination; Staging = $staging; Backup = $backup; Phase = 'OldBackedUp' } | ConvertTo-Json | Set-Content -LiteralPath $journalPath
+
+        $module = Get-Module -Name ExtGuide
+        $repaired = & $module { param($Path) Repair-ExtGuideInterruptedUpdate -Destination $Path } $destination
+
+        $repaired | Should Be $true
+        Test-Path -LiteralPath (Join-Path $destination 'extension\manifest.json') | Should Be $true
+        Test-Path -LiteralPath $backup | Should Be $false
+        Test-Path -LiteralPath $staging | Should Be $false
+        Test-Path -LiteralPath $journalPath | Should Be $false
     }
 
     It 'preserves the current installation when archive integrity fails' {
@@ -39,6 +171,23 @@ Describe 'ExtGuide secure workflow' {
 
         $badManifest = New-TestInstallerManifest -ArchiveBytes ([byte[]](9, 9, 9))
         $badAdapter = New-WorkflowTestAdapter -ManifestJson $badManifest -ArchiveBytes $archive -LocalApplicationData (Join-Path $TestDrive 'LocalAppData') -Destination $destination -UseRealInstaller
+        Set-WorkflowTestAdapter -Adapter $badAdapter
+        $failed = Invoke-ExtGuideBootstrap -ManifestUri $manifestUri
+
+        $failed.Status | Should Be 'Failed'
+        $failed.Category | Should Be 'Integrity'
+        (Get-Content -LiteralPath (Join-Path $installed.InstalledRoot 'background.js') -Raw) | Should Be 'working-content'
+    }
+
+    It 'preserves the current installation when release metadata names the wrong extension version' {
+        $archiveV1 = New-TestExtensionArchive -Version '1.0.0' -Background 'working-content'
+        $destination = Join-Path $TestDrive 'VersionMismatch\SampleExtension'
+        $firstAdapter = New-WorkflowTestAdapter -ManifestJson (New-TestInstallerManifest -ArchiveBytes $archiveV1 -ExtensionVersion '1.0.0') -ArchiveBytes $archiveV1 -LocalApplicationData $TestDrive -Destination $destination -UseRealInstaller
+        Set-WorkflowTestAdapter -Adapter $firstAdapter
+        $installed = Invoke-ExtGuideBootstrap -ManifestUri $manifestUri
+
+        $archiveV2 = New-TestExtensionArchive -Version '2.0.0' -Background 'untrusted-content'
+        $badAdapter = New-WorkflowTestAdapter -ManifestJson (New-TestInstallerManifest -ArchiveBytes $archiveV2 -ExtensionVersion '3.0.0') -ArchiveBytes $archiveV2 -LocalApplicationData $TestDrive -Destination $destination -UseRealInstaller
         Set-WorkflowTestAdapter -Adapter $badAdapter
         $failed = Invoke-ExtGuideBootstrap -ManifestUri $manifestUri
 

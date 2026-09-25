@@ -36,6 +36,16 @@ function ConvertFrom-ExtGuideManifest {
             Throw-ExtGuideError -Category 'Configuration' -Message "The manifest value '$propertyName' is not a safe folder name." -Recovery 'Ask the extension publisher to use a short name without path separators or reserved characters.'
         }
     }
+    if ($null -ne $manifest.PSObject.Properties['integrationId'] -and
+        -not [string]::IsNullOrWhiteSpace([string] $manifest.integrationId) -and
+        [string] $manifest.integrationId -notmatch '^[A-Za-z0-9][A-Za-z0-9._-]{2,127}$') {
+        Throw-ExtGuideError -Category 'Configuration' -Message "The manifest value 'integrationId' is not a safe identifier." -Recovery 'Ask the publisher to use 3-128 letters, numbers, dots, underscores, or hyphens.'
+    }
+    if ($null -ne $manifest.PSObject.Properties['extensionVersion'] -and
+        -not [string]::IsNullOrWhiteSpace([string] $manifest.extensionVersion) -and
+        [string] $manifest.extensionVersion -notmatch '^\d+(\.\d+){0,3}$') {
+        Throw-ExtGuideError -Category 'Configuration' -Message "The manifest value 'extensionVersion' is not a valid Chrome extension version." -Recovery 'Ask the publisher to use one to four dot-separated numeric components.'
+    }
     if (-not (Test-ExtGuideRelativePath -Value ([string] $manifest.extensionRoot))) {
         Throw-ExtGuideError -Category 'Configuration' -Message 'The extension root must be a relative path inside the release archive.' -Recovery 'Ask the extension publisher to correct extensionRoot.'
     }
@@ -56,6 +66,15 @@ function ConvertFrom-ExtGuideManifest {
         Throw-ExtGuideError -Category 'Configuration' -Message 'The manifest SHA-256 digest is malformed.' -Recovery 'Ask the extension publisher to publish a 64-character hexadecimal SHA-256 digest.'
     }
     return $manifest
+}
+
+function Get-ExtGuideIntegrationId {
+    param([Parameter(Mandatory = $true)] $Manifest)
+
+    if ($null -ne $Manifest.PSObject.Properties['integrationId'] -and -not [string]::IsNullOrWhiteSpace([string] $Manifest.integrationId)) {
+        return [string] $Manifest.integrationId
+    }
+    return ([string] $Manifest.publisher + '|' + [string] $Manifest.installFolderName)
 }
 
 function ConvertFrom-ExtGuideDigestText {

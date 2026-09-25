@@ -46,6 +46,26 @@ Describe 'ExtGuide Windows path virtualization handling' {
         $calls | Should Be @('direct:C:\Extensions\Sample')
     }
 
+    It 'routes only the archive writer through the elevated installer when requested' {
+        $module = Get-Module -Name ExtGuide
+        $calls = New-Object System.Collections.ArrayList
+        $context = [pscustomobject]@{ UseElevation = $true; IntegrationId = 'example.sample'; Publisher = 'Example'; InstallFolderName = 'Sample'; ArchiveSha256 = 'abc'; ExpectedVersion = '1.0.0' }
+        $detector = { param($Path) throw 'Elevation routing must happen before virtualization probing.' }
+        $elevated = {
+            param($Bytes, $Destination, $Root, $InstallContext)
+            $null = $calls.Add("elevated:${Destination}:$($InstallContext.IntegrationId)")
+            [pscustomobject]@{ ExtensionRoot = Join-Path $Destination $Root; Content = @{}; WasUpdate = $true }
+        }.GetNewClosure()
+
+        $result = & $module {
+            param($Bytes, $Destination, $Root, $Context, $Detector, $Elevated)
+            Install-ExtGuideArchiveForWindows -ArchiveBytes $Bytes -Destination $Destination -ExtensionRoot $Root -InstallContext $Context -VirtualizationDetector $Detector -ElevatedInstaller $Elevated
+        } ([byte[]](1, 2, 3)) 'C:\Protected\Sample' 'extension' $context $detector $elevated
+
+        $calls | Should Be @('elevated:C:\Protected\Sample:example.sample')
+        $result.WasUpdate | Should Be $true
+    }
+
     It 'builds a parseable standalone worker from the validated archive installer' {
         $module = Get-Module -Name ExtGuide
         $source = & $module { Get-ExtGuideInstallWorkerSource }
@@ -57,5 +77,18 @@ Describe 'ExtGuide Windows path virtualization handling' {
         $errors.Count | Should Be 0
         $source | Should Match 'Install-ExtGuideArchive'
         $source | Should Match 'ConvertTo-Json'
+    }
+
+    It 'builds a parseable unvirtualized settings worker' {
+        $module = Get-Module -Name ExtGuide
+        $source = & $module { Get-ExtGuideSettingsWorkerSource }
+        $tokens = $null
+        $errors = $null
+
+        $null = [System.Management.Automation.Language.Parser]::ParseInput($source, [ref] $tokens, [ref] $errors)
+
+        $errors.Count | Should Be 0
+        $source | Should Match "Operation -eq 'Read'"
+        $source | Should Match "Operation -eq 'Write'"
     }
 }

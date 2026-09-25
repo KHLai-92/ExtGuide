@@ -89,13 +89,13 @@ function Invoke-ExtGuideBootstrap {
         $remembered = Invoke-ExtGuideOptionalHostOperation -Adapter $adapter -Operation 'GetRememberedDestination' -Arguments @($manifest)
         if ($remembered) {
             $rememberedExists = Invoke-ExtGuideOptionalHostOperation -Adapter $adapter -Operation 'DestinationExists' -Arguments @([string] $remembered) -Default $false
-            $rememberedWritable = Invoke-ExtGuideOptionalHostOperation -Adapter $adapter -Operation 'TestDestinationWritable' -Arguments @([string] $remembered) -Default $true
-            if (-not $rememberedExists -or -not $rememberedWritable) { $remembered = $null }
+            if (-not $rememberedExists) { $remembered = $null }
         }
         $choice = Invoke-ExtGuideOptionalHostOperation -Adapter $adapter -Operation 'ChooseDestination' -Arguments @($manifest, $recommended, $remembered) -Default ([pscustomobject]@{ Cancelled = $false; Destination = $recommended; IsCustom = $false })
         if ($choice.Cancelled) { return [pscustomobject]@{ Status = 'Cancelled'; Destination = $recommended } }
         $destination = [System.IO.Path]::GetFullPath([string] $choice.Destination)
-        if (-not (Invoke-ExtGuideOptionalHostOperation -Adapter $adapter -Operation 'TestDestinationWritable' -Arguments @($destination) -Default $true)) {
+        $useElevation = $null -ne $choice.PSObject.Properties['UseElevation'] -and [bool] $choice.UseElevation
+        if (-not (Invoke-ExtGuideOptionalHostOperation -Adapter $adapter -Operation 'TestDestinationWritable' -Arguments @($destination) -Default $true) -and -not $useElevation) {
             Throw-ExtGuideError -Category 'Destination' -Message 'The selected installation location is not writable.' -Recovery 'Choose another folder where your Windows account can create and replace files.'
         }
 
@@ -116,7 +116,40 @@ function Invoke-ExtGuideBootstrap {
             Throw-ExtGuideError -Category 'Integrity' -Message 'The downloaded archive does not match its declared SHA-256 digest.' -Recovery 'Do not use this archive. Retry once, then ask the publisher to verify the release digest.'
         }
 
-        $installation = Invoke-ExtGuideHostOperation -Adapter $adapter -Operation 'WriteExtension' -Arguments @($archiveBytes, $destination, $manifest.extensionRoot)
+        $expectedVersion = if ($null -ne $manifest.PSObject.Properties['extensionVersion']) { [string] $manifest.extensionVersion } else { '' }
+        $installContext = [pscustomobject]@{
+            UseElevation = $useElevation
+            IntegrationId = Get-ExtGuideIntegrationId -Manifest $manifest
+            Publisher = [string] $manifest.publisher
+            InstallFolderName = [string] $manifest.installFolderName
+            ArchiveSha256 = $expectedSha256
+            ExpectedVersion = $expectedVersion
+        }
+        while ($true) {
+            try {
+                $installation = Invoke-ExtGuideHostOperation -Adapter $adapter -Operation 'WriteExtension' -Arguments @($archiveBytes, $destination, $manifest.extensionRoot, $installContext)
+                break
+            }
+            catch {
+                if (-not [bool] $_.Exception.Data['ExtGuideElevationDeclined']) { throw }
+                $fallbackChoice = Invoke-ExtGuideOptionalHostOperation -Adapter $adapter -Operation 'ChooseFallbackDestination' -Arguments @($manifest)
+                if ($null -eq $fallbackChoice) {
+                    $null = Invoke-ExtGuideOptionalHostOperation -Adapter $adapter -Operation 'CloseInstallSession' -Arguments @([string] $manifest.displayName)
+                    return [pscustomobject]@{ Status = 'Cancelled'; Destination = $destination }
+                }
+                if ($null -ne $fallbackChoice.PSObject.Properties['Destination']) {
+                    $destination = [System.IO.Path]::GetFullPath([string] $fallbackChoice.Destination)
+                    $installContext.UseElevation = $null -ne $fallbackChoice.PSObject.Properties['UseElevation'] -and [bool] $fallbackChoice.UseElevation
+                }
+                else {
+                    $destination = [System.IO.Path]::GetFullPath([string] $fallbackChoice)
+                    $installContext.UseElevation = $false
+                }
+                if (-not (Invoke-ExtGuideOptionalHostOperation -Adapter $adapter -Operation 'TestDestinationWritable' -Arguments @($destination) -Default $true) -and -not [bool] $installContext.UseElevation) {
+                    Throw-ExtGuideError -Category 'Destination' -Message 'The replacement installation location is not writable.' -Recovery 'Choose another folder or request administrator permission.'
+                }
+            }
+        }
         $null = Invoke-ExtGuideOptionalHostOperation -Adapter $adapter -Operation 'RememberDestination' -Arguments @($manifest, $destination)
         $chromeExecutable = Resolve-ExtGuideChrome -Adapter $adapter
         $installedRoot = $installation.ExtensionRoot
@@ -126,7 +159,7 @@ function Invoke-ExtGuideBootstrap {
         $extensionsUri = 'chrome://extensions/'
         try { $null = Invoke-ExtGuideHostOperation -Adapter $adapter -Operation 'LaunchChrome' -Arguments @($chromeExecutable, $extensionsUri) }
         catch { Throw-ExtGuideError -Category 'Launch' -Message 'ExtGuide installed the extension but could not open Chrome.' -Recovery 'Open Google Chrome and navigate to chrome://extensions manually.' -InnerException $_.Exception }
-        $guide = Invoke-ExtGuideHostOperation -Adapter $adapter -Operation 'ShowGuide' -Arguments @($manifest.displayName, $installedRoot, $chromeExecutable)
+        $guide = Invoke-ExtGuideHostOperation -Adapter $adapter -Operation 'ShowGuide' -Arguments @($manifest.displayName, $installedRoot, $chromeExecutable, [bool] $installation.WasUpdate)
 
         return [pscustomobject]@{
             Status = $guide.State
@@ -134,6 +167,8 @@ function Invoke-ExtGuideBootstrap {
             InstalledRoot = $installedRoot
             InstalledContent = $installation.Content
             WasUpdate = [bool] $installation.WasUpdate
+            PreviousVersion = if ($null -ne $installation.PSObject.Properties['PreviousVersion']) { [string] $installation.PreviousVersion } else { '' }
+            InstalledVersion = if ($null -ne $installation.PSObject.Properties['InstalledVersion']) { [string] $installation.InstalledVersion } else { '' }
             ClipboardPath = $installedRoot
             ChromeExecutable = $chromeExecutable
             LaunchUri = $extensionsUri

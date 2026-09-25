@@ -26,7 +26,7 @@ The guide tells the user to enable Developer mode, select Load unpacked, focus t
 6. As a user choosing a custom location, I want ExtGuide to create an extension-specific child directory automatically, so that extracted files do not pollute the directory I selected.
 7. As a user choosing a custom location, I want to see the final resolved destination before installation, so that I know exactly where the extension will live.
 8. As a user, I want the installer to detect whether the selected destination is writable, so that permission problems are explained before a download or extraction fails.
-9. As a user, I want installation to work without administrator privileges, so that I do not have to approve system-wide changes.
+9. As a user, I want the recommended installation to work without administrator privileges, while retaining the option to approve a scoped UAC prompt when I explicitly choose a protected location.
 10. As a user, I want ExtGuide to remember my chosen destination, so that later installs or updates continue using the same location.
 11. As a user, I want the extension root to remain stable across versions, so that Chrome does not lose the unpacked extension when it is updated.
 12. As a security-conscious user, I want the downloaded archive verified against its declared SHA-256 digest, so that corrupted or substituted content is rejected.
@@ -73,7 +73,7 @@ The guide tells the user to enable Developer mode, select Load unpacked, focus t
 - The consumer-facing interface consists of one bootstrap invocation with one required installer-manifest URL. Downloading, verification, destination management, Chrome discovery, launching, and guidance remain behind that interface.
 - The initial supported platform is desktop Windows 10 and Windows 11 with Google Chrome installed.
 - The bootstrap targets built-in Windows PowerShell 5.1 and desktop .NET capabilities. It must not require PowerShell 7, Git, curl, tar, Node.js, npm, Python, 7-Zip, or another separately installed runtime.
-- The bootstrap runs per user and does not require administrator privileges or modify Chrome enterprise policies.
+- The bootstrap runs per user and does not require administrator privileges at the recommended destination or modify Chrome enterprise policies. If the user explicitly selects a protected destination, only the validated archive writer may request UAC elevation; declining returns the user to location selection.
 - Each extension integration publishes a versioned installer manifest. The schema includes a schema version, display name, publisher, safe install-folder name, direct archive URL, direct SHA-256 URL or digest, and the relative extension root inside the archive.
 - Remote configuration may select names beneath the bootstrap-managed per-user root but may not declare an arbitrary absolute default destination. Arbitrary locations are accepted only after explicit selection in the native folder chooser.
 - The default destination is a durable per-user Local Application Data location organized by publisher and extension. Downloads, desktop folders, temporary folders, and version-numbered Chrome roots are not defaults.

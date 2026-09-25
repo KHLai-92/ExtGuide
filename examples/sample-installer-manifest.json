@@ -1,6 +1,8 @@
 {
   "schemaVersion": 1,
   "displayName": "ExtGuide Sample",
+  "integrationId": "org.example.extguide-sample",
+  "extensionVersion": "1.0.0",
   "publisher": "ExtGuide",
   "installFolderName": "SampleExtension",
   "archiveUrl": "https://github.com/example/extguide-sample/releases/download/v1.0.0/extension.zip",

@@ -36,11 +36,13 @@ function New-ExtGuideWindowsHostAdapter {
         FetchBytes = { param($Uri) Invoke-ExtGuideDownload -Uri $Uri -AsBytes }
         GetLocalApplicationDataPath = { [Environment]::GetFolderPath('LocalApplicationData') }
         ChooseDestination = { param($Manifest, $Recommended, $Remembered) Show-ExtGuideDestinationWindow -Manifest $Manifest -RecommendedDestination $Recommended -RememberedDestination $Remembered }
+        ChooseFallbackDestination = { param($Manifest) Select-ExtGuideFallbackDestination -Manifest $Manifest }
+        CloseInstallSession = { param($DisplayName) Close-ExtGuideUiSession -DisplayName $DisplayName }
         DestinationExists = { param($Destination) Test-Path -LiteralPath $Destination -PathType Container }
         TestDestinationWritable = { param($Destination) Test-ExtGuideDestinationWritable -Destination $Destination }
         GetRememberedDestination = { param($Manifest) Get-ExtGuideRememberedDestination -Manifest $Manifest }
         RememberDestination = { param($Manifest, $Destination) Set-ExtGuideRememberedDestination -Manifest $Manifest -Destination $Destination }
-        WriteExtension = { param($ArchiveBytes, $Destination, $ExtensionRoot) Install-ExtGuideArchiveForWindows -ArchiveBytes $ArchiveBytes -Destination $Destination -ExtensionRoot $ExtensionRoot }
+        WriteExtension = { param($ArchiveBytes, $Destination, $ExtensionRoot, $InstallContext) Install-ExtGuideArchiveForWindows -ArchiveBytes $ArchiveBytes -Destination $Destination -ExtensionRoot $ExtensionRoot -InstallContext $InstallContext }
         GetRunningChromeCandidates = { Get-ExtGuideRunningChromeCandidates }
         GetRegisteredChromeCandidates = { Get-ExtGuideRegisteredChromeCandidates }
         GetRememberedChrome = { Get-ExtGuideRememberedChrome }
@@ -49,7 +51,7 @@ function New-ExtGuideWindowsHostAdapter {
         RememberChrome = { param($Path) Set-ExtGuideRememberedChrome -Path $Path }
         SetClipboard = { param($Text) Initialize-ExtGuideWinForms; [System.Windows.Forms.Clipboard]::SetText($Text) }
         LaunchChrome = { param($Executable, $Uri) Open-ExtGuideChromeExtensionsPage -Executable $Executable -Uri $Uri }
-        ShowGuide = { param($DisplayName, $InstalledRoot, $ChromeExecutable) Show-ExtGuideGuidanceWindow -DisplayName $DisplayName -InstalledRoot $InstalledRoot -ChromeExecutable $ChromeExecutable }
+        ShowGuide = { param($DisplayName, $InstalledRoot, $ChromeExecutable, $WasUpdate) Show-ExtGuideGuidanceWindow -DisplayName $DisplayName -InstalledRoot $InstalledRoot -ChromeExecutable $ChromeExecutable -WasUpdate ([bool] $WasUpdate) }
         ShowError = { param($Failure) Show-ExtGuideFailureWindow -Failure $Failure }
         LogFailure = { param($Failure) Write-ExtGuideSafeLog -Category $Failure.Category }
     }

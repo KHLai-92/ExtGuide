@@ -45,6 +45,30 @@ function New-ExtGuideButton {
     return $button
 }
 
+function Show-ExtGuideAdministratorPermissionDialog {
+    param([System.Windows.Forms.IWin32Window] $Owner)
+
+    $form = New-ExtGuideForm -Title (Get-ExtGuideText -Key 'AdministratorPermissionTitle')
+    $form.ClientSize = New-Object System.Drawing.Size(620, 260)
+    $heading = New-ExtGuideLabel -Text (Get-ExtGuideText -Key 'AdministratorPermissionTitle') -X 28 -Y 24 -Width 560 -Height 38 -Size 16 -Bold $true
+    $explanation = New-ExtGuideLabel -Text (Get-ExtGuideText -Key 'AdministratorPermissionExplanation') -X 30 -Y 72 -Width 550 -Height 82
+    $elevate = New-ExtGuideButton -Text (Get-ExtGuideText -Key 'UseAdministratorPermission') -X 30 -Y 190 -Width 235 -TabIndex 0
+    $change = New-ExtGuideButton -Text (Get-ExtGuideText -Key 'ChooseAnotherLocation') -X 277 -Y 190 -Width 185 -TabIndex 1
+    $cancel = New-ExtGuideButton -Text (Get-ExtGuideText -Key 'Cancel') -X 474 -Y 190 -Width 110 -TabIndex 2
+    $elevate.BackColor = [System.Drawing.Color]::FromArgb(36, 99, 235)
+    $elevate.ForeColor = [System.Drawing.Color]::White
+    $choice = @{ Value = 'Cancel' }
+    $elevate.Add_Click({ $choice.Value = 'Elevate'; $form.DialogResult = [System.Windows.Forms.DialogResult]::OK })
+    $change.Add_Click({ $choice.Value = 'Change'; $form.DialogResult = [System.Windows.Forms.DialogResult]::OK })
+    $cancel.Add_Click({ $choice.Value = 'Cancel'; $form.DialogResult = [System.Windows.Forms.DialogResult]::Cancel })
+    $form.AcceptButton = $elevate
+    $form.CancelButton = $cancel
+    $form.Controls.AddRange(@($heading, $explanation, $elevate, $change, $cancel))
+    if ($null -ne $Owner) { $null = $form.ShowDialog($Owner) } else { $null = $form.ShowDialog() }
+    $form.Dispose()
+    return [string] $choice.Value
+}
+
 function Get-ExtGuideAssetImage {
     param([Parameter(Mandatory = $true)][string] $Name)
 
@@ -80,7 +104,7 @@ function Show-ExtGuideDestinationWindow {
 
     $form = New-ExtGuideForm -Title (Get-ExtGuideText -Key 'InstallTitle' -Arguments @([string] $Manifest.displayName))
     $initialDestination = if ($RememberedDestination) { $RememberedDestination } else { $RecommendedDestination }
-    $state = @{ Destination = $initialDestination; IsCustom = [bool] $RememberedDestination }
+    $state = @{ Destination = $initialDestination; IsCustom = [bool] $RememberedDestination; UseElevation = $false; IsUpdate = $false }
     $heading = New-ExtGuideLabel -Text (Get-ExtGuideText -Key 'InstallTitle' -Arguments @([string] $Manifest.displayName)) -X 28 -Y 24 -Width 560 -Height 40 -Size 18 -Bold $true
     $explanation = New-ExtGuideLabel -Text (Get-ExtGuideText -Key 'InstallExplanation') -X 30 -Y 76 -Width 550 -Height 52
     $pathLabel = New-ExtGuideLabel -Text (Get-ExtGuideText -Key 'FinalExtensionLocation') -X 30 -Y 145 -Width 300 -Height 25 -Bold $true
@@ -96,21 +120,60 @@ function Show-ExtGuideDestinationWindow {
     $cancelButton = New-ExtGuideButton -Text (Get-ExtGuideText -Key 'Cancel') -X 278 -Y 430 -Width 100 -TabIndex 3
     $installButton.BackColor = [System.Drawing.Color]::FromArgb(36, 99, 235)
     $installButton.ForeColor = [System.Drawing.Color]::White
-    $installButton.DialogResult = [System.Windows.Forms.DialogResult]::OK
     $cancelButton.DialogResult = [System.Windows.Forms.DialogResult]::Cancel
     $status = New-ExtGuideLabel -Text (Get-ExtGuideText -Key 'DestinationHint') -X 30 -Y 286 -Width 550 -Height 70
 
-    $changeHandler = {
+    $refreshOperation = {
+        $candidateRoot = Join-Path $state.Destination ([string] $Manifest.extensionRoot)
+        $state.IsUpdate = Test-Path -LiteralPath (Join-Path $candidateRoot 'manifest.json') -PathType Leaf
+        if ($state.IsUpdate) {
+            $form.Text = Get-ExtGuideText -Key 'UpdateTitle' -Arguments @([string] $Manifest.displayName)
+            $heading.Text = Get-ExtGuideText -Key 'UpdateTitle' -Arguments @([string] $Manifest.displayName)
+            $explanation.Text = Get-ExtGuideText -Key 'UpdateExplanation'
+            $installButton.Text = Get-ExtGuideText -Key 'UpdateExtension'
+            $installButton.AccessibleName = $installButton.Text
+        }
+        else {
+            $form.Text = Get-ExtGuideText -Key 'InstallTitle' -Arguments @([string] $Manifest.displayName)
+            $heading.Text = Get-ExtGuideText -Key 'InstallTitle' -Arguments @([string] $Manifest.displayName)
+            $explanation.Text = Get-ExtGuideText -Key 'InstallExplanation'
+            $installButton.Text = Get-ExtGuideText -Key 'InstallExtension'
+            $installButton.AccessibleName = $installButton.Text
+        }
+    }
+    $chooseFolder = {
         $chooser = New-Object System.Windows.Forms.FolderBrowserDialog
         $chooser.Description = Get-ExtGuideText -Key 'ChooseBaseFolder'
         if ($chooser.ShowDialog($form) -eq [System.Windows.Forms.DialogResult]::OK) {
             $state.Destination = Join-Path $chooser.SelectedPath ([string] $Manifest.installFolderName)
             $state.IsCustom = $true
             $pathBox.Text = $state.Destination
+            & $refreshOperation
         }
         $chooser.Dispose()
     }
+    $changeHandler = { & $chooseFolder }
+    $installHandler = {
+        if (Test-ExtGuideDestinationWritable -Destination $state.Destination) {
+            $state.UseElevation = $false
+            $form.DialogResult = [System.Windows.Forms.DialogResult]::OK
+            return
+        }
+        $decision = Show-ExtGuideAdministratorPermissionDialog -Owner $form
+        if ($decision -eq 'Elevate') {
+            $state.UseElevation = $true
+            $form.DialogResult = [System.Windows.Forms.DialogResult]::OK
+        }
+        elseif ($decision -eq 'Change') {
+            & $chooseFolder
+        }
+        else {
+            $form.DialogResult = [System.Windows.Forms.DialogResult]::Cancel
+        }
+    }
     $changeButton.Add_Click($changeHandler)
+    $installButton.Add_Click($installHandler)
+    & $refreshOperation
     $form.AcceptButton = $installButton
     $form.CancelButton = $cancelButton
     $form.Controls.AddRange(@($heading, $explanation, $pathLabel, $pathBox, $changeButton, $cancelButton, $installButton, $status))
@@ -128,11 +191,44 @@ function Show-ExtGuideDestinationWindow {
     [System.Windows.Forms.Application]::DoEvents()
     $sessionKey = [string] $Manifest.displayName
     $script:ExtGuideUiSessions[$sessionKey] = $form
-    return [pscustomobject]@{ Cancelled = $false; Destination = $state.Destination; IsCustom = $state.IsCustom }
+    return [pscustomobject]@{ Cancelled = $false; Destination = $state.Destination; IsCustom = $state.IsCustom; UseElevation = $state.UseElevation; IsUpdate = $state.IsUpdate }
+}
+
+function Select-ExtGuideFallbackDestination {
+    param($Manifest)
+
+    Initialize-ExtGuideWinForms
+    while ($true) {
+        $chooser = New-Object System.Windows.Forms.FolderBrowserDialog
+        $chooser.Description = Get-ExtGuideText -Key 'ChooseWritableBaseFolder'
+        $dialogResult = $chooser.ShowDialog()
+        $selectedPath = $chooser.SelectedPath
+        $chooser.Dispose()
+        if ($dialogResult -ne [System.Windows.Forms.DialogResult]::OK) { return $null }
+
+        $destination = Join-Path $selectedPath ([string] $Manifest.installFolderName)
+        if (Test-ExtGuideDestinationWritable -Destination $destination) {
+            return [pscustomobject]@{ Destination = $destination; UseElevation = $false }
+        }
+        $decision = Show-ExtGuideAdministratorPermissionDialog
+        if ($decision -eq 'Elevate') {
+            return [pscustomobject]@{ Destination = $destination; UseElevation = $true }
+        }
+        if ($decision -eq 'Cancel') { return $null }
+    }
+}
+
+function Close-ExtGuideUiSession {
+    param([string] $DisplayName)
+
+    if (-not $script:ExtGuideUiSessions.ContainsKey($DisplayName)) { return }
+    $form = $script:ExtGuideUiSessions[$DisplayName]
+    if ($null -ne $form -and -not $form.IsDisposed) { $form.Close(); $form.Dispose() }
+    $script:ExtGuideUiSessions.Remove($DisplayName)
 }
 
 function Set-ExtGuideGuidanceControls {
-    param([System.Windows.Forms.Form] $Form, [string] $DisplayName, [string] $InstalledRoot, [string] $ChromeExecutable, [string] $PolicyNotice)
+    param([System.Windows.Forms.Form] $Form, [string] $DisplayName, [string] $InstalledRoot, [string] $ChromeExecutable, [string] $PolicyNotice, [bool] $WasUpdate = $false)
 
     $Form.SuspendLayout()
     foreach ($control in @($Form.Controls)) {
@@ -142,24 +238,23 @@ function Set-ExtGuideGuidanceControls {
         }
     }
     $Form.Controls.Clear()
-    $Form.ClientSize = New-Object System.Drawing.Size(1160, 520)
-    $Form.Text = Get-ExtGuideText -Key 'FinishTitle' -Arguments @($DisplayName)
+    $Form.ClientSize = if ($WasUpdate) { New-Object System.Drawing.Size(620, 520) } else { New-Object System.Drawing.Size(1160, 520) }
+    $Form.Text = Get-ExtGuideText -Key $(if ($WasUpdate) { 'UpdateFinishTitle' } else { 'FinishTitle' }) -Arguments @($DisplayName)
     $Form.TopMost = $false
-    $heading = New-ExtGuideLabel -Text (Get-ExtGuideText -Key 'FinishHeading') -X 28 -Y 20 -Width 1100 -Height 42 -Size 18 -Bold $true
-    $subheading = New-ExtGuideLabel -Text (Get-ExtGuideText -Key 'FinishSubheading') -X 30 -Y 68 -Width 1090 -Height 42
-    $steps = @(
-        (Get-ExtGuideText -Key 'Step1'),
-        (Get-ExtGuideText -Key 'Step2'),
-        (Get-ExtGuideText -Key 'Step3'),
-        (Get-ExtGuideText -Key 'Step4'),
-        (Get-ExtGuideText -Key 'Step5')
-    )
+    $heading = New-ExtGuideLabel -Text (Get-ExtGuideText -Key $(if ($WasUpdate) { 'UpdateFinishHeading' } else { 'FinishHeading' })) -X 28 -Y 20 -Width $(if ($WasUpdate) { 560 } else { 1100 }) -Height 42 -Size 18 -Bold $true
+    $subheading = New-ExtGuideLabel -Text (Get-ExtGuideText -Key $(if ($WasUpdate) { 'UpdateFinishSubheading' } else { 'FinishSubheading' })) -X 30 -Y 68 -Width $(if ($WasUpdate) { 550 } else { 1090 }) -Height 42
+    $steps = if ($WasUpdate) {
+        @((Get-ExtGuideText -Key 'UpdateStep1'), (Get-ExtGuideText -Key 'UpdateStep2'), (Get-ExtGuideText -Key 'UpdateStep3'))
+    }
+    else {
+        @((Get-ExtGuideText -Key 'Step1'), (Get-ExtGuideText -Key 'Step2'), (Get-ExtGuideText -Key 'Step3'), (Get-ExtGuideText -Key 'Step4'), (Get-ExtGuideText -Key 'Step5'))
+    }
     $y = 120
     foreach ($step in $steps) {
         $Form.Controls.Add((New-ExtGuideLabel -Text $step -X 42 -Y $y -Width 530 -Height 34 -Size 10.5))
         $y += 38
     }
-    $guideImage = Get-ExtGuideAssetImage -Name (Get-ExtGuideVisualGuideAssetName)
+    $guideImage = if ($WasUpdate) { $null } else { Get-ExtGuideAssetImage -Name (Get-ExtGuideVisualGuideAssetName) }
     $guidePicture = $null
     $guideCaption = $null
     if ($null -ne $guideImage) {
@@ -195,7 +290,7 @@ function Set-ExtGuideGuidanceControls {
     $Form.Controls.AddRange(@($heading, $subheading, $pathLabel, $pathBox, $copy, $reopen, $openFolder, $done))
     if ($null -ne $guidePicture) { $Form.Controls.AddRange(@($guidePicture, $guideCaption)) }
     if ($PolicyNotice) {
-        $notice = New-ExtGuideLabel -Text $PolicyNotice -X 30 -Y 452 -Width 1100 -Height 55 -Size 8.5
+        $notice = New-ExtGuideLabel -Text $PolicyNotice -X 30 -Y 452 -Width $(if ($WasUpdate) { 550 } else { 1100 }) -Height 55 -Size 8.5
         $notice.ForeColor = [System.Drawing.Color]::FromArgb(146, 64, 14)
         $notice.AccessibleName = Get-ExtGuideText -Key 'ManagedPolicyNotice'
         $Form.Controls.Add($notice)
@@ -205,12 +300,12 @@ function Set-ExtGuideGuidanceControls {
 }
 
 function Show-ExtGuideGuidanceWindow {
-    param([string] $DisplayName, [string] $InstalledRoot, [string] $ChromeExecutable)
+    param([string] $DisplayName, [string] $InstalledRoot, [string] $ChromeExecutable, [bool] $WasUpdate = $false)
 
     Initialize-ExtGuideWinForms
     $form = $script:ExtGuideUiSessions[$DisplayName]
     if ($null -eq $form -or $form.IsDisposed) { $form = New-ExtGuideForm -Title (Get-ExtGuideText -Key 'FinishTitle' -Arguments @($DisplayName)) }
-    Set-ExtGuideGuidanceControls -Form $form -DisplayName $DisplayName -InstalledRoot $InstalledRoot -ChromeExecutable $ChromeExecutable -PolicyNotice (Get-ExtGuideManagedPolicyNotice)
+    Set-ExtGuideGuidanceControls -Form $form -DisplayName $DisplayName -InstalledRoot $InstalledRoot -ChromeExecutable $ChromeExecutable -PolicyNotice (Get-ExtGuideManagedPolicyNotice) -WasUpdate $WasUpdate
     $form.TopMost = $true
     if (-not $form.Visible) { $form.Show() }
     $form.BringToFront()
@@ -222,7 +317,7 @@ function Show-ExtGuideGuidanceWindow {
         Start-Sleep -Milliseconds 40
     }
     $script:ExtGuideUiSessions.Remove($DisplayName)
-    return [pscustomobject]@{ State = 'GuidanceReady'; DisplayName = $DisplayName; InstalledRoot = $InstalledRoot }
+    return [pscustomobject]@{ State = 'GuidanceReady'; DisplayName = $DisplayName; InstalledRoot = $InstalledRoot; WasUpdate = $WasUpdate }
 }
 
 function Select-ExtGuideChromeExecutable {
