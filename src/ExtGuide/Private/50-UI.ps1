@@ -34,6 +34,50 @@ function New-ExtGuideLabel {
     return $label
 }
 
+function New-ExtGuideHighlightedStep {
+    param(
+        [string] $Text,
+        [string] $Highlight,
+        [System.Drawing.Color] $HighlightColor,
+        [int] $X,
+        [int] $Y,
+        [int] $Width,
+        [int] $Height
+    )
+
+    $panel = New-Object System.Windows.Forms.Panel
+    $panel.Location = New-Object System.Drawing.Point($X, $Y)
+    $panel.Size = New-Object System.Drawing.Size($Width, $Height)
+    $panel.AccessibleName = $Text
+    $panel.AccessibleRole = [System.Windows.Forms.AccessibleRole]::StaticText
+
+    $highlightIndex = $Text.IndexOf($Highlight, [System.StringComparison]::CurrentCulture)
+    if ($highlightIndex -lt 0) {
+        $panel.Controls.Add((New-ExtGuideLabel -Text $Text -X 0 -Y 0 -Width $Width -Height $Height -Size 10.5))
+        return $panel
+    }
+
+    $segments = @(
+        [pscustomobject]@{ Text = $Text.Substring(0, $highlightIndex); Color = [System.Drawing.Color]::Empty },
+        [pscustomobject]@{ Text = $Highlight; Color = $HighlightColor },
+        [pscustomobject]@{ Text = $Text.Substring($highlightIndex + $Highlight.Length); Color = [System.Drawing.Color]::Empty }
+    )
+    $left = 0
+    foreach ($segment in $segments) {
+        if ([string]::IsNullOrEmpty($segment.Text)) { continue }
+        $label = New-ExtGuideLabel -Text $segment.Text -X $left -Y 0 -Width $Width -Height $Height -Size 10.5
+        $label.AutoEllipsis = $false
+        $label.AutoSize = $true
+        if (-not $segment.Color.IsEmpty) {
+            $label.ForeColor = $segment.Color
+            $label.Font = New-Object System.Drawing.Font('Segoe UI', 10.5, [System.Drawing.FontStyle]::Bold)
+        }
+        $panel.Controls.Add($label)
+        $left += $label.Width
+    }
+    return $panel
+}
+
 function New-ExtGuideButton {
     param([string] $Text, [int] $X, [int] $Y, [int] $Width, [int] $TabIndex)
     $button = New-Object System.Windows.Forms.Button
@@ -250,8 +294,17 @@ function Set-ExtGuideGuidanceControls {
         @((Get-ExtGuideText -Key 'Step1'), (Get-ExtGuideText -Key 'Step2'), (Get-ExtGuideText -Key 'Step3'), (Get-ExtGuideText -Key 'Step4'), (Get-ExtGuideText -Key 'Step5'))
     }
     $y = 120
-    foreach ($step in $steps) {
-        $Form.Controls.Add((New-ExtGuideLabel -Text $step -X 42 -Y $y -Width 530 -Height 34 -Size 10.5))
+    for ($stepIndex = 0; $stepIndex -lt $steps.Count; $stepIndex++) {
+        $step = $steps[$stepIndex]
+        if (-not $WasUpdate -and $stepIndex -eq 0) {
+            $Form.Controls.Add((New-ExtGuideHighlightedStep -Text $step -Highlight (Get-ExtGuideText -Key 'GreenOutlineTerm') -HighlightColor ([System.Drawing.Color]::FromArgb(24, 130, 54)) -X 42 -Y $y -Width 530 -Height 34))
+        }
+        elseif (-not $WasUpdate -and $stepIndex -eq 1) {
+            $Form.Controls.Add((New-ExtGuideHighlightedStep -Text $step -Highlight (Get-ExtGuideText -Key 'OrangeOutlineTerm') -HighlightColor ([System.Drawing.Color]::FromArgb(217, 90, 0)) -X 42 -Y $y -Width 530 -Height 34))
+        }
+        else {
+            $Form.Controls.Add((New-ExtGuideLabel -Text $step -X 42 -Y $y -Width 530 -Height 34 -Size 10.5))
+        }
         $y += 38
     }
     $guideImage = if ($WasUpdate) { $null } else { Get-ExtGuideAssetImage -Name (Get-ExtGuideVisualGuideAssetName) }
@@ -265,7 +318,8 @@ function Set-ExtGuideGuidanceControls {
         $guidePicture.SizeMode = [System.Windows.Forms.PictureBoxSizeMode]::Zoom
         $guidePicture.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
         $guidePicture.AccessibleName = Get-ExtGuideText -Key 'VisualGuideAccessibleName'
-        $guideCaption = New-ExtGuideLabel -Text (Get-ExtGuideText -Key 'VisualGuideCaption') -X 650 -Y 465 -Width 480 -Height 48 -Size 8.5
+        $guidePicture.AccessibleDescription = Get-ExtGuideText -Key 'VisualGuideAttribution'
+        $guideCaption = New-ExtGuideLabel -Text (Get-ExtGuideText -Key 'VisualGuideAttribution') -X 650 -Y 464 -Width 480 -Height 22 -Size 8.5
     }
     $pathLabel = New-ExtGuideLabel -Text (Get-ExtGuideText -Key 'PreparedExtensionPath') -X 30 -Y 320 -Width 300 -Height 24 -Bold $true
     $pathBox = New-Object System.Windows.Forms.TextBox
@@ -288,7 +342,8 @@ function Set-ExtGuideGuidanceControls {
     $openFolder.Add_Click($openFolderHandler)
     $done.Add_Click($doneHandler)
     $Form.Controls.AddRange(@($heading, $subheading, $pathLabel, $pathBox, $copy, $reopen, $openFolder, $done))
-    if ($null -ne $guidePicture) { $Form.Controls.AddRange(@($guidePicture, $guideCaption)) }
+    if ($null -ne $guidePicture) { $Form.Controls.Add($guidePicture) }
+    if ($null -ne $guideCaption) { $Form.Controls.Add($guideCaption) }
     if ($PolicyNotice) {
         $notice = New-ExtGuideLabel -Text $PolicyNotice -X 30 -Y 452 -Width $(if ($WasUpdate) { 550 } else { 1100 }) -Height 55 -Size 8.5
         $notice.ForeColor = [System.Drawing.Color]::FromArgb(146, 64, 14)
@@ -376,8 +431,9 @@ function Select-ExtGuideChromeExecutable {
 function Show-ExtGuideFailureWindow {
     param($Failure)
     Initialize-ExtGuideWinForms
-    $text = "$($Failure.Message)`r`n`r`n$(Get-ExtGuideText -Key 'WhatToDo' -Arguments @($Failure.Recovery))"
-    $null = [System.Windows.Forms.MessageBox]::Show($text, (Get-ExtGuideText -Key 'ErrorTitle' -Arguments @($Failure.Category)), 'OK', 'Error')
+    $display = Get-ExtGuideFailureDisplay -Failure $Failure
+    $text = "$($display.Message)`r`n`r`n$(Get-ExtGuideText -Key 'WhatToDo' -Arguments @($display.Recovery))"
+    $null = [System.Windows.Forms.MessageBox]::Show($text, (Get-ExtGuideText -Key 'ErrorTitle' -Arguments @($display.Category)), 'OK', 'Error')
     foreach ($session in @($script:ExtGuideUiSessions.Values)) {
         if ($null -ne $session -and -not $session.IsDisposed) { $session.Close(); $session.Dispose() }
     }

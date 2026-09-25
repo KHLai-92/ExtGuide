@@ -21,4 +21,6 @@ Archives containing absolute paths, parent traversal, symbolic links, duplicate 
 
 After a successful installation, ExtGuide writes `.extguide-install.json` beside the extension root. The receipt binds the destination to `integrationId` (or the legacy `publisher|installFolderName` fallback), records the installed version and archive digest, and prevents a later run from replacing a different ExtGuide installation.
 
+If the remembered destination still exists but its installed files were removed, ExtGuide treats an empty folder as a fresh installation and treats a matching receipt as a repairable installation. A non-empty folder without a matching receipt or extension manifest is never replaced automatically.
+
 Custom destinations are remembered per Windows user. If a chosen location is protected, ExtGuide may ask the user to approve a scoped Windows UAC prompt. Only the validated archive writer is elevated; downloads, Chrome discovery, and guidance continue without elevation.

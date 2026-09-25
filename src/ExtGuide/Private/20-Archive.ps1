@@ -202,7 +202,12 @@ function Install-ExtGuideArchive {
     $journalPath = Get-ExtGuideUpdateJournalPath -Destination $Destination
     $movedCurrent = $false
     $installed = $false
-    $wasUpdate = Test-Path -LiteralPath $Destination
+    $destinationPathExists = Test-Path -LiteralPath $Destination
+    if ($destinationPathExists -and -not (Test-Path -LiteralPath $Destination -PathType Container)) {
+        Throw-ExtGuideError -Category 'Destination' -Message 'The selected installation location is not a folder.' -Recovery 'Choose an empty folder or the folder previously used for this extension.'
+    }
+    $destinationExists = Test-Path -LiteralPath $Destination -PathType Container
+    $wasUpdate = $false
     $previousVersion = $null
     try {
         $null = New-Item -ItemType Directory -Path $staging -Force -ErrorAction Stop
@@ -212,20 +217,31 @@ function Install-ExtGuideArchive {
         if (-not [string]::IsNullOrWhiteSpace($ExpectedVersion) -and [string] $extensionManifest.version -ne $ExpectedVersion) {
             Throw-ExtGuideError -Category 'Integrity' -Message 'The extension version inside the archive does not match the installer manifest.' -Recovery 'Do not install this archive; ask the publisher to correct the release metadata.'
         }
-        if ($wasUpdate) {
-            $existingRoot = [System.IO.Path]::GetFullPath((Join-Path $Destination $ExtensionRoot))
-            $existingManifest = Get-ExtGuideExtensionManifest -ExtensionDirectory $existingRoot -Category 'Destination'
-            $previousVersion = [string] $existingManifest.version
+        if ($destinationExists) {
             $receipt = Read-ExtGuideInstallationReceipt -Destination $Destination
-            if ($null -ne $receipt) {
-                if ([int] $receipt.receiptVersion -ne 1 -or
-                    [string] $receipt.integrationId -ne $IntegrationId -or
-                    [string] $receipt.extensionRoot -ne $ExtensionRoot) {
-                    Throw-ExtGuideError -Category 'Destination' -Message 'The selected folder belongs to a different ExtGuide installation.' -Recovery 'Choose the folder previously used for this extension, or choose a new location.'
+            if ($null -ne $receipt -and
+                ([int] $receipt.receiptVersion -ne 1 -or
+                 [string] $receipt.integrationId -ne $IntegrationId -or
+                 [string] $receipt.extensionRoot -ne $ExtensionRoot)) {
+                Throw-ExtGuideError -Category 'Destination' -Message 'The selected folder belongs to a different ExtGuide installation.' -Recovery 'Choose the folder previously used for this extension, or choose a new location.'
+            }
+
+            $existingRoot = [System.IO.Path]::GetFullPath((Join-Path $Destination $ExtensionRoot))
+            $existingManifestPath = Join-Path $existingRoot 'manifest.json'
+            if (Test-Path -LiteralPath $existingManifestPath -PathType Leaf) {
+                $existingManifest = Get-ExtGuideExtensionManifest -ExtensionDirectory $existingRoot -Category 'Destination'
+                $previousVersion = [string] $existingManifest.version
+                $wasUpdate = $true
+                if ($null -eq $receipt -and -not ([string] $existingManifest.name).Equals([string] $extensionManifest.name, [System.StringComparison]::Ordinal)) {
+                    Throw-ExtGuideError -Category 'Destination' -Message 'The selected folder contains a different unpacked extension.' -Recovery 'Choose the folder previously used for this extension, or choose a new location.'
                 }
             }
-            elseif (-not ([string] $existingManifest.name).Equals([string] $extensionManifest.name, [System.StringComparison]::Ordinal)) {
-                Throw-ExtGuideError -Category 'Destination' -Message 'The selected folder contains a different unpacked extension.' -Recovery 'Choose the folder previously used for this extension, or choose a new location.'
+            elseif ($null -ne $receipt) {
+                $previousVersion = [string] $receipt.extensionVersion
+                $wasUpdate = $true
+            }
+            elseif (@(Get-ChildItem -LiteralPath $Destination -Force -ErrorAction Stop).Count -gt 0) {
+                Throw-ExtGuideError -Category 'Destination' -Message 'The selected folder is not an empty ExtGuide installation location.' -Recovery 'Choose an empty folder or the folder previously used for this extension.'
             }
         }
 
@@ -244,7 +260,7 @@ function Install-ExtGuideArchive {
 
         $journal = [ordered]@{ journalVersion = 1; Destination = $Destination; Staging = $staging; Backup = $backup; Phase = 'Prepared' }
         Write-ExtGuideUpdateJournal -Path $journalPath -Journal $journal
-        if ($wasUpdate) {
+        if ($destinationExists) {
             Move-Item -LiteralPath $Destination -Destination $backup -ErrorAction Stop
             $movedCurrent = $true
             $journal.Phase = 'OldBackedUp'

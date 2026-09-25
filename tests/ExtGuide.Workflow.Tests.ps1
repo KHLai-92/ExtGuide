@@ -37,6 +37,44 @@ Describe 'ExtGuide secure workflow' {
         (Get-Content -LiteralPath (Join-Path $second.InstalledRoot 'background.js') -Raw) | Should Be 'new-content'
     }
 
+    It 'reinstalls into a remembered destination after its installed files were deleted' {
+        $archive = New-TestExtensionArchive -Version '1.0.0' -Background 'restored-content'
+        $destination = Join-Path $TestDrive 'DeletedInstall\SampleExtension'
+        $firstAdapter = New-WorkflowTestAdapter -ManifestJson (New-TestInstallerManifest -ArchiveBytes $archive) -ArchiveBytes $archive -LocalApplicationData $TestDrive -Destination $destination -UseRealInstaller
+        Set-WorkflowTestAdapter -Adapter $firstAdapter
+        $first = Invoke-ExtGuideBootstrap -ManifestUri $manifestUri
+        $first.Status | Should Be 'GuidanceReady'
+
+        Get-ChildItem -LiteralPath $destination -Force | Remove-Item -Recurse -Force
+
+        $secondAdapter = New-WorkflowTestAdapter -ManifestJson (New-TestInstallerManifest -ArchiveBytes $archive) -ArchiveBytes $archive -LocalApplicationData $TestDrive -Destination $destination -UseRealInstaller
+        $secondAdapter.GetRememberedDestination = { param($Manifest) $destination }.GetNewClosure()
+        Set-WorkflowTestAdapter -Adapter $secondAdapter
+
+        $second = Invoke-ExtGuideBootstrap -ManifestUri $manifestUri
+
+        $second.Status | Should Be 'GuidanceReady'
+        $second.WasUpdate | Should Be $false
+        Test-Path -LiteralPath (Join-Path $second.InstalledRoot 'manifest.json') -PathType Leaf | Should Be $true
+        (Get-Content -LiteralPath (Join-Path $second.InstalledRoot 'background.js') -Raw) | Should Be 'restored-content'
+    }
+
+    It 'does not overwrite a non-empty destination that is not an ExtGuide installation' {
+        $archive = New-TestExtensionArchive
+        $destination = Join-Path $TestDrive 'UnrelatedFolder\SampleExtension'
+        $null = New-Item -ItemType Directory -Path $destination -Force
+        Set-Content -LiteralPath (Join-Path $destination 'keep-me.txt') -Value 'user-data'
+        $adapter = New-WorkflowTestAdapter -ManifestJson (New-TestInstallerManifest -ArchiveBytes $archive) -ArchiveBytes $archive -LocalApplicationData $TestDrive -Destination $destination -UseRealInstaller
+        Set-WorkflowTestAdapter -Adapter $adapter
+
+        $result = Invoke-ExtGuideBootstrap -ManifestUri $manifestUri
+
+        $result.Status | Should Be 'Failed'
+        $result.Category | Should Be 'Destination'
+        (Get-Content -LiteralPath (Join-Path $destination 'keep-me.txt') -Raw).Trim() | Should Be 'user-data'
+        Test-Path -LiteralPath (Join-Path $destination 'extension\manifest.json') | Should Be $false
+    }
+
     It 'refuses to replace a destination whose receipt belongs to another integration' {
         $archive = New-TestExtensionArchive -Version '1.0.0'
         $destination = Join-Path $TestDrive 'IdentityCase\SampleExtension'

@@ -51,3 +51,16 @@ function Get-ExtGuideText {
     if ($Arguments.Count -gt 0) { return [string]::Format($strings[$Key], $Arguments) }
     return $strings[$Key]
 }
+
+function Get-ExtGuideFailureDisplay {
+    param([Parameter(Mandatory = $true)] $Failure)
+
+    $category = [string] $Failure.Category
+    $supportedCategories = @('Configuration', 'Network', 'Integrity', 'Destination', 'Extraction', 'ChromeDiscovery', 'ExecutableValidation', 'Launch', 'Policy')
+    if ($supportedCategories -notcontains $category) { $category = 'Configuration' }
+    return [pscustomobject]@{
+        Category = Get-ExtGuideText -Key ("FailureCategory{0}" -f $category)
+        Message = Get-ExtGuideText -Key ("FailureMessage{0}" -f $category)
+        Recovery = Get-ExtGuideText -Key ("FailureRecovery{0}" -f $category)
+    }
+}
