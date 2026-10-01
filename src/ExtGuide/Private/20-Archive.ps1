@@ -7,7 +7,10 @@ function Get-ExtGuideSha256 {
 }
 
 function Test-ExtGuideDestinationWritable {
-    param([Parameter(Mandatory = $true)][string] $Destination)
+    param(
+        [Parameter(Mandatory = $true)][string] $Destination,
+        [scriptblock] $VirtualizationDetector
+    )
 
     $probeDirectory = if (Test-Path -LiteralPath $Destination -PathType Container) { $Destination } else { Split-Path -Parent $Destination }
     try {
@@ -15,6 +18,10 @@ function Test-ExtGuideDestinationWritable {
         $probe = Join-Path $probeDirectory ('.extguide-write-' + [guid]::NewGuid().ToString('N'))
         [System.IO.File]::WriteAllText($probe, 'ExtGuide write probe')
         Remove-Item -LiteralPath $probe -Force -ErrorAction Stop
+        if ($null -eq $VirtualizationDetector) {
+            $VirtualizationDetector = { param($Path) Test-ExtGuidePathVirtualized -Destination $Path }
+        }
+        if (& $VirtualizationDetector $Destination) { return $false }
         return $true
     }
     catch { return $false }

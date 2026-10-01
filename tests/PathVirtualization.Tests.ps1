@@ -66,6 +66,48 @@ Describe 'ExtGuide Windows path virtualization handling' {
         $result.WasUpdate | Should Be $true
     }
 
+    It 'treats a denied virtualization probe as a protected destination that needs permission' {
+        $module = Get-Module -Name ExtGuide
+        $denied = [System.UnauthorizedAccessException]::new("Access to 'C:\Program Files' is denied.")
+        $wrapped = [System.Management.Automation.MethodInvocationException]::new(
+            "Exception calling 'WriteAllText' with '2' argument(s): '$($denied.Message)'", $denied)
+        $detector = { param($Path) throw $wrapped }.GetNewClosure()
+        $destination = Join-Path $TestDrive 'protected-parent\Sample'
+
+        $writable = & $module {
+            param($Destination, $Detector)
+            Test-ExtGuideDestinationWritable -Destination $Destination -VirtualizationDetector $Detector
+        } $destination $detector
+
+        $writable | Should Be $false
+    }
+
+    It 'treats a redirected write probe as a protected destination that needs permission' {
+        $module = Get-Module -Name ExtGuide
+        $detector = { param($Path) $true }
+        $destination = Join-Path $TestDrive 'redirected-parent\Sample'
+
+        $writable = & $module {
+            param($Destination, $Detector)
+            Test-ExtGuideDestinationWritable -Destination $Destination -VirtualizationDetector $Detector
+        } $destination $detector
+
+        $writable | Should Be $false
+    }
+
+    It 'keeps a physically writable destination available without permission' {
+        $module = Get-Module -Name ExtGuide
+        $detector = { param($Path) $false }
+        $destination = Join-Path $TestDrive 'ordinary-parent\Sample'
+
+        $writable = & $module {
+            param($Destination, $Detector)
+            Test-ExtGuideDestinationWritable -Destination $Destination -VirtualizationDetector $Detector
+        } $destination $detector
+
+        $writable | Should Be $true
+    }
+
     It 'builds a parseable standalone worker from the validated archive installer' {
         $module = Get-Module -Name ExtGuide
         $source = & $module { Get-ExtGuideInstallWorkerSource }
