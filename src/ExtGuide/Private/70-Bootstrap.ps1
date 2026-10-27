@@ -69,11 +69,21 @@ function Resolve-ExtGuideChrome {
 }
 
 function Invoke-ExtGuideBootstrap {
-    [CmdletBinding()]
-    param([Parameter(Mandatory = $true, Position = 0)][uri] $ManifestUri)
+    [CmdletBinding(DefaultParameterSetName = 'Manifest')]
+    param([Parameter(Mandatory = $true, Position = 0, ParameterSetName = 'Manifest')][uri] $ManifestUri,
+          [Parameter(Mandatory = $true, ParameterSetName = 'GitHub')][string] $GitHubRepository,
+          [Parameter(ParameterSetName = 'GitHub')][switch] $NoGitHubLogin)
 
     $adapter = $script:ExtGuideHostAdapter
     try {
+        if ($PSCmdlet.ParameterSetName -eq 'GitHub') {
+            $github = New-ExtGuideGitHubSession -Repository $GitHubRepository -NoLogin:$NoGitHubLogin
+            $ManifestUri = [uri]('https://github.com/' + $github.Repository + '/releases/latest/download/installer-manifest.json')
+            $adapter = $adapter.Clone()
+            $download = ${function:Invoke-ExtGuideGitHubDownload}
+            $adapter.FetchText = { param($Uri) & $download -Session $github -Uri $Uri }.GetNewClosure()
+            $adapter.FetchBytes = { param($Uri) & $download -Session $github -Uri $Uri -AsBytes }.GetNewClosure()
+        }
         if ($ManifestUri.Scheme -ne 'https') {
             Throw-ExtGuideError -Category 'Configuration' -Message 'The installer manifest URL must use HTTPS.' -Recovery 'Use the HTTPS manifest URL published by the extension author.'
         }

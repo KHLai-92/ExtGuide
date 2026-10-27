@@ -1,6 +1,6 @@
 @{
     RootModule = 'ExtGuide.psm1'
-    ModuleVersion = '1.1.1'
+    ModuleVersion = '1.2.0'
     GUID = 'e25332cc-3ec0-49f5-921b-3c73c885f9d2'
     Author = 'ExtGuide contributors'
     CompanyName = 'ExtGuide'

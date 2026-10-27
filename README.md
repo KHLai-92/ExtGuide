@@ -27,10 +27,30 @@ Publish a prebuilt Manifest V3 ZIP and a schema-v1 installer manifest. See [the 
 Give users one version-pinned command. Replace only the manifest URL with your published extension release asset:
 
 ```powershell
-[Net.ServicePointManager]::SecurityProtocol=[Net.SecurityProtocolType]::Tls12;$w=New-Object Net.WebClient;try{$s=$w.DownloadString('https://github.com/KHLai-92/ExtGuide/releases/download/v1.1.1/ExtGuide-v1.1.1.ps1')}finally{$w.Dispose()};&([scriptblock]::Create($s)) -ManifestUri 'https://github.com/YOUR-ORG/YOUR-EXTENSION/releases/latest/download/installer-manifest.json'
+[Net.ServicePointManager]::SecurityProtocol=[Net.SecurityProtocolType]::Tls12;$w=New-Object Net.WebClient;try{$s=$w.DownloadString('https://github.com/KHLai-92/ExtGuide/releases/download/v1.2.0/ExtGuide-v1.2.0.ps1')}finally{$w.Dispose()};&([scriptblock]::Create($s)) -ManifestUri 'https://github.com/YOUR-ORG/YOUR-EXTENSION/releases/latest/download/installer-manifest.json'
 ```
 
-The ExtGuide URL is pinned to `v1.1.1`; the extension manifest may independently follow the extension's latest release. `DownloadString` is intentional because GitHub serves PowerShell release assets as binary content. No GitHub API, credentials, Git, Node.js, npm, Python, or 7-Zip is required. The recommended per-user destination needs no administrator rights; Windows may show a UAC prompt only when the user explicitly chooses a protected location.
+The ExtGuide URL is pinned to `v1.2.0`; the extension manifest may independently follow the extension's latest release. `DownloadString` is intentional because GitHub serves PowerShell release assets as binary content. Public downloads require no credentials or GitHub CLI. Git, Node.js, npm, Python, and 7-Zip are not required. The recommended per-user destination needs no administrator rights; Windows may show a UAC prompt only when the user explicitly chooses a protected location.
+
+## Private GitHub releases
+
+On each Windows computer, install the official [GitHub CLI](https://cli.github.com/) once if it is not installed:
+
+```powershell
+winget install --id GitHub.cli --source winget
+```
+
+Reopen PowerShell, then use the same command for installation and future updates:
+
+```powershell
+[Net.ServicePointManager]::SecurityProtocol=[Net.SecurityProtocolType]::Tls12;$w=New-Object Net.WebClient;try{$s=$w.DownloadString('https://github.com/KHLai-92/ExtGuide/releases/download/v1.2.0/ExtGuide-v1.2.0.ps1')}finally{$w.Dispose()};&([scriptblock]::Create($s)) -GitHubRepository 'YOUR-ORG/YOUR-PRIVATE-EXTENSION'
+```
+
+ExtGuide checks the active GitHub CLI account. If this computer is not authenticated, it starts `gh auth login --hostname github.com --git-protocol https --web`; complete the browser sign-in with your own account. Browser sign-in alone does not authenticate PowerShell. The account must have permission to read the private repository. If necessary, run `gh auth switch --hostname github.com` to select the correct account.
+
+The command contains a repository name and a public ExtGuide release URL, with no access token, password, or signed private download URL. GitHub CLI manages its own authentication; ExtGuide never requests or exports a token and does not put credentials in logs. Downloads use the authenticated GitHub release asset API and are restricted to the selected repository. The latest manifest and its versioned assets are pinned to one release metadata response during each update.
+
+An unauthenticated or unauthorized account cannot download the private manifest or ZIP. Authentication, download, and SHA-256 verification finish before the existing installation is replaced. Existing ExtGuide installations update at their original location, including remembered custom folders; Chrome then needs its normal **Reload** action. Run the same command on another computer after authenticating that computer's own account. Use `-NoGitHubLogin` to fail without opening a login flow when authentication is missing.
 
 ## Build and verify
 

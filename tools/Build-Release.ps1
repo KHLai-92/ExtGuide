@@ -1,6 +1,6 @@
 [CmdletBinding()]
 param(
-    [string] $Version = '1.1.1',
+    [string] $Version = '1.2.0',
     [string] $OutputDirectory
 )
 
@@ -14,10 +14,14 @@ $null = New-Item -ItemType Directory -Path $OutputDirectory -Force
 $outputPath = Join-Path $OutputDirectory ("ExtGuide-v$Version.ps1")
 
 $header = @'
-[CmdletBinding()]
+[CmdletBinding(DefaultParameterSetName = 'Manifest')]
 param(
-    [Parameter(Mandatory = $true, Position = 0)]
-    [uri] $ManifestUri
+    [Parameter(Mandatory = $true, Position = 0, ParameterSetName = 'Manifest')]
+    [uri] $ManifestUri,
+    [Parameter(Mandatory = $true, ParameterSetName = 'GitHub')]
+    [string] $GitHubRepository,
+    [Parameter(ParameterSetName = 'GitHub')]
+    [switch] $NoGitHubLogin
 )
 
 $ErrorActionPreference = 'Stop'
@@ -41,7 +45,7 @@ Get-ChildItem -LiteralPath $privateDirectory -Filter '*.ps1' | Sort-Object Name 
     $parts += Get-Content -LiteralPath $_.FullName -Raw
 }
 $parts += '$script:ExtGuideHostAdapter = New-ExtGuideWindowsHostAdapter'
-$parts += 'Invoke-ExtGuideBootstrap -ManifestUri $ManifestUri'
+$parts += 'Invoke-ExtGuideBootstrap @PSBoundParameters'
 $utf8WithBom = New-Object System.Text.UTF8Encoding($true)
 [System.IO.File]::WriteAllText($outputPath, ($parts -join "`r`n`r`n"), $utf8WithBom)
 

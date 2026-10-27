@@ -56,7 +56,7 @@ function Get-ExtGuideFailureDisplay {
     param([Parameter(Mandatory = $true)] $Failure)
 
     $category = [string] $Failure.Category
-    $supportedCategories = @('Configuration', 'Network', 'Integrity', 'Destination', 'Extraction', 'ChromeDiscovery', 'ExecutableValidation', 'Launch', 'Policy')
+    $supportedCategories = @('Configuration', 'Authentication', 'Network', 'Integrity', 'Destination', 'Extraction', 'ChromeDiscovery', 'ExecutableValidation', 'Launch', 'Policy')
     if ($supportedCategories -notcontains $category) { $category = 'Configuration' }
     return [pscustomobject]@{
         Category = Get-ExtGuideText -Key ("FailureCategory{0}" -f $category)

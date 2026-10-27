@@ -1,7 +1,7 @@
 function New-ExtGuideException {
     param(
         [Parameter(Mandatory = $true)]
-        [ValidateSet('Configuration', 'Network', 'Integrity', 'Destination', 'Extraction', 'ChromeDiscovery', 'ExecutableValidation', 'Launch', 'Policy')]
+        [ValidateSet('Configuration', 'Authentication', 'Network', 'Integrity', 'Destination', 'Extraction', 'ChromeDiscovery', 'ExecutableValidation', 'Launch', 'Policy')]
         [string] $Category,
         [Parameter(Mandatory = $true)][string] $Message,
         [Parameter(Mandatory = $true)][string] $Recovery,

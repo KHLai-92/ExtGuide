@@ -1,4 +1,8 @@
 {
+  "GitHubSignIn": "請使用自己的 GitHub 帳號完成瀏覽器登入；該帳號必須有權限讀取此擴充功能的私有倉庫。",
+  "FailureCategoryAuthentication": "GitHub 身分驗證",
+  "FailureMessageAuthentication": "ExtGuide 無法使用有權限讀取此私有版本的 GitHub 帳號完成驗證。",
+  "FailureRecoveryAuthentication": "請從 cli.github.com 安裝 GitHub CLI，執行 gh auth login --hostname github.com --web 並登入有權限讀取此倉庫的帳號。若帳號不對，請用 gh auth switch 切換後重試。",
   "InstallTitle": "安裝 {0}",
   "InstallExplanation": "ExtGuide 會將擴充功能保存在所選位置；若資料夾受 Windows 保護，安裝時可能要求系統管理員權限。",
   "FinalExtensionLocation": "擴充功能最終位置",

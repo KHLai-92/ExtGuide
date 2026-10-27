@@ -1,4 +1,8 @@
 {
+  "GitHubSignIn": "Sign in to GitHub with your own account. The account must have read access to the extension repository.",
+  "FailureCategoryAuthentication": "GitHub authentication",
+  "FailureMessageAuthentication": "ExtGuide could not authenticate a GitHub account with access to the private release.",
+  "FailureRecoveryAuthentication": "Install GitHub CLI from cli.github.com, then run gh auth login --hostname github.com --web with an account that can read this repository. Use gh auth switch if the wrong account is active, then retry.",
   "InstallTitle": "Install {0}",
   "InstallExplanation": "ExtGuide will keep the extension at the selected location. Windows may request administrator permission for a protected folder.",
   "FinalExtensionLocation": "Final extension location",

@@ -1,6 +1,6 @@
 # ExtGuide installer manifest schema v1
 
-An extension release publishes a versioned JSON manifest and a prebuilt ZIP archive. All URLs must be direct HTTPS asset URLs; ExtGuide does not use the GitHub API.
+An extension release publishes a versioned JSON manifest and a prebuilt ZIP archive. All URLs must be direct HTTPS asset URLs. The public `-ManifestUri` mode downloads these directly. The `-GitHubRepository OWNER/REPOSITORY` mode uses the signed-in GitHub CLI account and GitHub release asset API; the manifest, ZIP, and optional digest must belong to that same repository.
 
 | Property | Required | Meaning |
 | --- | --- | --- |

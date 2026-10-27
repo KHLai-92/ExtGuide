@@ -1,7 +1,11 @@
-[CmdletBinding()]
+[CmdletBinding(DefaultParameterSetName = 'Manifest')]
 param(
-    [Parameter(Mandatory = $true, Position = 0)]
-    [uri] $ManifestUri
+    [Parameter(Mandatory = $true, Position = 0, ParameterSetName = 'Manifest')]
+    [uri] $ManifestUri,
+    [Parameter(Mandatory = $true, ParameterSetName = 'GitHub')]
+    [string] $GitHubRepository,
+    [Parameter(ParameterSetName = 'GitHub')]
+    [switch] $NoGitHubLogin
 )
 
 $ErrorActionPreference = 'Stop'
@@ -11,4 +15,4 @@ if (-not (Test-Path -LiteralPath $modulePath)) {
 }
 
 Import-Module $modulePath -Force
-Invoke-ExtGuideBootstrap -ManifestUri $ManifestUri
+Invoke-ExtGuideBootstrap @PSBoundParameters
