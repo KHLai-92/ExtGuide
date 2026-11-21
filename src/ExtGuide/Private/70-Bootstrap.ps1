@@ -72,13 +72,30 @@ function Invoke-ExtGuideBootstrap {
     [CmdletBinding(DefaultParameterSetName = 'Manifest')]
     param([Parameter(Mandatory = $true, Position = 0, ParameterSetName = 'Manifest')][uri] $ManifestUri,
           [Parameter(Mandatory = $true, ParameterSetName = 'GitHub')][string] $GitHubRepository,
-          [Parameter(ParameterSetName = 'GitHub')][switch] $NoGitHubLogin)
+          [Parameter(ParameterSetName = 'GitHub')][switch] $NoGitHubLogin,
+          [string] $ReleaseTag)
 
     $adapter = $script:ExtGuideHostAdapter
     try {
+        $github = $null
         if ($PSCmdlet.ParameterSetName -eq 'GitHub') {
             $github = New-ExtGuideGitHubSession -Repository $GitHubRepository -NoLogin:$NoGitHubLogin
-            $ManifestUri = [uri]('https://github.com/' + $github.Repository + '/releases/latest/download/installer-manifest.json')
+        }
+        elseif ($ManifestUri.Scheme -eq 'https' -and $ManifestUri.DnsSafeHost -ieq 'github.com' -and
+            $ManifestUri.Port -eq 443 -and -not $ManifestUri.UserInfo -and -not $ManifestUri.Query -and -not $ManifestUri.Fragment) {
+            $source = [regex]::Match($ManifestUri.AbsolutePath, '^/([A-Za-z0-9-]+)/([A-Za-z0-9_.-]+)/releases/latest/download/installer-manifest\.json$')
+            if ($source.Success) {
+                $github = @{ Repository = $source.Groups[1].Value + '/' + $source.Groups[2].Value; Cli = $null; Releases = @{} }
+            }
+        }
+        if ($github) {
+            $ManifestUri = Select-ExtGuideRelease -Session $github -Adapter $adapter -ReleaseTag $ReleaseTag
+            if ($null -eq $ManifestUri) { return [pscustomobject]@{ Status = 'Cancelled' } }
+        }
+        elseif ($ReleaseTag) {
+            Throw-ExtGuideError -Category 'Configuration' -Message 'ReleaseTag requires a GitHub repository or latest installer-manifest.json URL.' -Recovery 'Use -GitHubRepository or a public GitHub latest installer-manifest.json URL.'
+        }
+        if ($github -and $github.Cli) {
             $adapter = $adapter.Clone()
             $download = ${function:Invoke-ExtGuideGitHubDownload}
             $adapter.FetchText = { param($Uri) & $download -Session $github -Uri $Uri }.GetNewClosure()
@@ -93,6 +110,7 @@ function Invoke-ExtGuideBootstrap {
             Throw-ExtGuideError -Category 'Network' -Message 'ExtGuide could not download the installer manifest.' -Recovery 'Check the internet connection and verify the manifest URL.' -InnerException $_.Exception
         }
         $manifest = ConvertFrom-ExtGuideManifest -Json $manifestJson
+        if ($github) { Set-ExtGuideSelectedReleaseManifest -Manifest $manifest -Session $github }
 
         $localApplicationData = Invoke-ExtGuideHostOperation -Adapter $adapter -Operation 'GetLocalApplicationDataPath'
         $recommended = [System.IO.Path]::Combine($localApplicationData, [string] $manifest.publisher, [string] $manifest.installFolderName)

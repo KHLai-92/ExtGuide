@@ -92,7 +92,7 @@ Describe 'Invoke-ExtGuideBootstrap' {
         $module = Get-Module -Name ExtGuide
         & $module { param($HostAdapter) Set-ExtGuideHostAdapter -Adapter $HostAdapter } $adapter
 
-        $result = Invoke-ExtGuideBootstrap -ManifestUri 'https://github.com/example/extguide-sample/releases/latest/download/installer-manifest.json'
+        $result = Invoke-ExtGuideBootstrap -ManifestUri 'https://github.com/example/extguide-sample/releases/download/v1.0.0/installer-manifest.json'
 
         $result.Status | Should Be 'GuidanceReady'
         $result.Destination | Should Be 'C:\Users\Example\AppData\Local\ExtGuide\SampleExtension'
@@ -103,7 +103,7 @@ Describe 'Invoke-ExtGuideBootstrap' {
         $result.LaunchUri | Should Be 'chrome://extensions/'
         $result.Guide.DisplayName | Should Be 'ExtGuide Sample'
 
-        $adapter.State.ManifestRequests | Should Be @('https://github.com/example/extguide-sample/releases/latest/download/installer-manifest.json')
+        $adapter.State.ManifestRequests | Should Be @('https://github.com/example/extguide-sample/releases/download/v1.0.0/installer-manifest.json')
         $adapter.State.ArchiveRequests | Should Be @('https://github.com/example/extguide-sample/releases/download/v1.0.0/extension.zip')
         $adapter.State.Installation.Destination | Should Be $result.Destination
         $adapter.State.Installation.ExtensionRoot | Should Be $result.InstalledRoot

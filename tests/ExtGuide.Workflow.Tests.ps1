@@ -37,6 +37,24 @@ Describe 'ExtGuide secure workflow' {
         (Get-Content -LiteralPath (Join-Path $second.InstalledRoot 'background.js') -Raw) | Should Be 'new-content'
     }
 
+    It 'replaces a newer installation with an older version and preserves the destination and reload guidance' {
+        $destination = Join-Path $TestDrive 'Downgrade\SampleExtension'
+        foreach ($version in @('2.0.0', '1.0.0')) {
+            $archive = New-TestExtensionArchive -Version $version -Background $version
+            $adapter = New-WorkflowTestAdapter -ManifestJson (New-TestInstallerManifest -ArchiveBytes $archive -ExtensionVersion $version) -ArchiveBytes $archive -LocalApplicationData $TestDrive -Destination $destination -UseRealInstaller
+            Set-WorkflowTestAdapter -Adapter $adapter
+            $result = Invoke-ExtGuideBootstrap -ManifestUri $manifestUri
+            $result.Status | Should Be 'GuidanceReady'
+        }
+        $result.WasUpdate | Should Be $true
+        $result.PreviousVersion | Should Be '2.0.0'
+        $result.InstalledVersion | Should Be '1.0.0'
+        $result.Destination | Should Be $destination
+        $result.Guide.WasUpdate | Should Be $true
+        (Get-Content -LiteralPath (Join-Path $result.InstalledRoot 'background.js') -Raw) | Should Be '1.0.0'
+        (Get-Content -LiteralPath (Join-Path $destination '.extguide-install.json') -Raw | ConvertFrom-Json).extensionVersion | Should Be '1.0.0'
+    }
+
     It 'reinstalls into a remembered destination after its installed files were deleted' {
         $archive = New-TestExtensionArchive -Version '1.0.0' -Background 'restored-content'
         $destination = Join-Path $TestDrive 'DeletedInstall\SampleExtension'

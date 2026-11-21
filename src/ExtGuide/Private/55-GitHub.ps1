@@ -19,7 +19,7 @@ function Invoke-ExtGuideGitHubCli {
     # Arguments are fixed flags or validated/percent-encoded API paths, never
     # credentials. Do not invoke a shell or expose gh's stderr in safe logs.
     foreach ($argument in $Arguments) {
-        if ($argument -notmatch '^[A-Za-z0-9_./:%?=+,-]+\z') {
+        if ($argument -notmatch '^[A-Za-z0-9_./:%?=&+,-]+\z') {
             Throw-ExtGuideError -Category 'Configuration' -Message 'Invalid GitHub CLI argument.' -Recovery 'Use an unmodified ExtGuide release and a GitHub repository name.'
         }
     }

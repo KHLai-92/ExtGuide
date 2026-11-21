@@ -5,7 +5,8 @@ param(
     [Parameter(Mandatory = $true, ParameterSetName = 'GitHub')]
     [string] $GitHubRepository,
     [Parameter(ParameterSetName = 'GitHub')]
-    [switch] $NoGitHubLogin
+    [switch] $NoGitHubLogin,
+    [string] $ReleaseTag
 )
 
 $ErrorActionPreference = 'Stop'

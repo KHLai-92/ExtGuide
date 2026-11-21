@@ -14,6 +14,10 @@ The smoke test must use a standard user account. The evidence records whether th
 
 ## Private GitHub update verification
 
+ExtGuide 1.3 release selection is covered by `tests/ReleaseSelection.Tests.ps1`, including authenticated downloads, older releases, selectable pre-releases, pagination beyond 100 releases, cancellation, explicit tags, release pinning, and localized accessible dropdowns. `ExtGuide.Workflow.Tests.ps1` also checks a real archive downgrade at the same root with an updated receipt and Reload guidance. The private update verifier selects the default stable tag at the UI boundary so it remains unattended.
+
+For release selection QA, run `bootstrap.ps1 -GitHubRepository OWNER/REPOSITORY`, open the dropdown, select an older stable version and an eligible beta, and verify the resulting ZIP version and receipt at an isolated destination. A beta needs its own uploaded `installer-manifest.json`; see [the schema](manifest-schema.md) for an example. GitHub's [release API](https://docs.github.com/en/rest/releases/releases) supplies paginated published release metadata; ExtGuide applies its manifest eligibility rules and marks prereleases in the UI.
+
 Build the standalone release, authenticate GitHub CLI with an account that can read the test repository, and run:
 
 ```powershell

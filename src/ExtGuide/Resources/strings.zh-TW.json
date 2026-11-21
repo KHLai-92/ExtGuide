@@ -1,4 +1,10 @@
 {
+  "ChooseReleaseTitle": "選擇發行版本",
+  "ChooseReleaseHeading": "選擇要安裝的版本",
+  "ReleaseVersion": "發行版本",
+  "ReleaseSelectionHint": "僅列出附有安裝資訊清單的已發布版本。選擇舊版本會在相同位置取代目前的安裝。",
+  "Prerelease": "預先發行版",
+  "Continue": "繼續",
   "GitHubSignIn": "請使用自己的 GitHub 帳號完成瀏覽器登入；該帳號必須有權限讀取此擴充功能的私有倉庫。",
   "FailureCategoryAuthentication": "GitHub 身分驗證",
   "FailureMessageAuthentication": "ExtGuide 無法使用有權限讀取此私有版本的 GitHub 帳號完成驗證。",

@@ -143,6 +143,58 @@ function Get-ExtGuideVisualGuideAssetName {
     return 'chrome-extensions-page.png'
 }
 
+function New-ExtGuideReleaseWindow {
+    param([string] $Repository, [object[]] $Releases, [string] $DefaultTag)
+
+    $form = New-ExtGuideForm -Title (Get-ExtGuideText -Key 'ChooseReleaseTitle')
+    $form.ClientSize = New-Object System.Drawing.Size(620, 330)
+    $heading = New-ExtGuideLabel -Text (Get-ExtGuideText -Key 'ChooseReleaseHeading') -X 28 -Y 24 -Width 560 -Height 40 -Size 18 -Bold $true
+    $repositoryLabel = New-ExtGuideLabel -Text $Repository -X 30 -Y 74 -Width 550 -Height 26
+    $label = New-ExtGuideLabel -Text (Get-ExtGuideText -Key 'ReleaseVersion') -X 30 -Y 112 -Width 550 -Height 24 -Bold $true
+    $list = New-Object System.Windows.Forms.ComboBox
+    $list.Name = 'ReleaseList'
+    $list.Location = New-Object System.Drawing.Point(30, 142)
+    $list.Size = New-Object System.Drawing.Size(555, 30)
+    $list.DropDownStyle = [System.Windows.Forms.ComboBoxStyle]::DropDownList
+    $list.DropDownWidth = 555
+    $list.MaxDropDownItems = 12
+    $list.TabIndex = 0
+    $list.AccessibleName = Get-ExtGuideText -Key 'ReleaseVersion'
+    $list.DisplayMember = 'Label'
+    foreach ($release in $Releases) {
+        $tag = [string] $release.tag_name
+        $name = if ($null -ne $release.PSObject.Properties['name']) { [string] $release.name } else { '' }
+        $text = if ($name -and $name -cne $tag) { $tag + ' - ' + $name } else { $tag }
+        if ($release.prerelease) { $text += ' (' + (Get-ExtGuideText -Key 'Prerelease') + ')' }
+        $index = $list.Items.Add([pscustomobject]@{ Tag = $tag; Label = $text })
+        if ($tag -ceq $DefaultTag) { $list.SelectedIndex = $index }
+    }
+    if ($list.SelectedIndex -lt 0 -and $list.Items.Count) { $list.SelectedIndex = 0 }
+    $hint = New-ExtGuideLabel -Text (Get-ExtGuideText -Key 'ReleaseSelectionHint') -X 30 -Y 190 -Width 550 -Height 52
+    $next = New-ExtGuideButton -Text (Get-ExtGuideText -Key 'Continue') -X 390 -Y 266 -Width 195 -TabIndex 1
+    $next.DialogResult = [System.Windows.Forms.DialogResult]::OK
+    $next.Enabled = $list.Items.Count -gt 0
+    $cancel = New-ExtGuideButton -Text (Get-ExtGuideText -Key 'Cancel') -X 278 -Y 266 -Width 100 -TabIndex 2
+    $cancel.DialogResult = [System.Windows.Forms.DialogResult]::Cancel
+    $form.Controls.AddRange(@($heading, $repositoryLabel, $label, $list, $hint, $next, $cancel))
+    $form.AcceptButton = $next
+    $form.CancelButton = $cancel
+    return $form
+}
+
+function Show-ExtGuideReleaseWindow {
+    param([string] $Repository, [object[]] $Releases, [string] $DefaultTag)
+
+    $form = New-ExtGuideReleaseWindow -Repository $Repository -Releases $Releases -DefaultTag $DefaultTag
+    try {
+        if ($form.ShowDialog() -eq [System.Windows.Forms.DialogResult]::OK) {
+            return [string] $form.Controls['ReleaseList'].SelectedItem.Tag
+        }
+        return $null
+    }
+    finally { $form.Dispose() }
+}
+
 function Show-ExtGuideDestinationWindow {
     param($Manifest, [string] $RecommendedDestination, [string] $RememberedDestination)
 

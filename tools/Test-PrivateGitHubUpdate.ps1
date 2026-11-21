@@ -8,7 +8,7 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $root = Split-Path -Parent $PSScriptRoot
-if (-not $ReleaseScript) { $ReleaseScript = Join-Path $root 'artifacts\extguide-release\ExtGuide-v1.2.0.ps1' }
+if (-not $ReleaseScript) { $ReleaseScript = Join-Path $root 'artifacts\extguide-release\ExtGuide-v1.3.0.ps1' }
 if (-not $EvidenceDirectory) { $EvidenceDirectory = Join-Path $root ('artifacts\private-github-update-' + [guid]::NewGuid().ToString('N')) }
 $EvidenceDirectory = [IO.Path]::GetFullPath($EvidenceDirectory)
 if (Test-Path -LiteralPath $EvidenceDirectory) { throw 'Use a new, empty evidence directory.' }
@@ -34,6 +34,7 @@ $evidence = & $candidate {
     $script:ValidationAppData = Join-Path $EvidenceRoot 'FreshLocalAppData'
     function script:Get-ExtGuideSettingsPath { return $script:ValidationSettingsPath }
     $adapter = New-ExtGuideWindowsHostAdapter
+    $adapter.ChooseRelease = { param($Repository, $Releases, $DefaultTag) $DefaultTag }
     $adapter.GetLocalApplicationDataPath = { $script:ValidationAppData }
     $adapter.ChooseDestination = {
         param($Manifest, $Recommended, $Remembered)

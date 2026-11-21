@@ -1,6 +1,6 @@
 [CmdletBinding()]
 param(
-    [string] $Version = '1.2.0',
+    [string] $Version = '1.3.0',
     [string] $OutputDirectory
 )
 
@@ -21,7 +21,8 @@ param(
     [Parameter(Mandatory = $true, ParameterSetName = 'GitHub')]
     [string] $GitHubRepository,
     [Parameter(ParameterSetName = 'GitHub')]
-    [switch] $NoGitHubLogin
+    [switch] $NoGitHubLogin,
+    [string] $ReleaseTag
 )
 
 $ErrorActionPreference = 'Stop'

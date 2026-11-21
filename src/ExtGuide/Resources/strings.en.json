@@ -1,4 +1,10 @@
 {
+  "ChooseReleaseTitle": "Choose a release",
+  "ChooseReleaseHeading": "Choose the version to install",
+  "ReleaseVersion": "Release version",
+  "ReleaseSelectionHint": "Only published releases with an installer manifest are listed. Choosing an older version replaces the current installation at the same location.",
+  "Prerelease": "Pre-release",
+  "Continue": "Continue",
   "GitHubSignIn": "Sign in to GitHub with your own account. The account must have read access to the extension repository.",
   "FailureCategoryAuthentication": "GitHub authentication",
   "FailureMessageAuthentication": "ExtGuide could not authenticate a GitHub account with access to the private release.",

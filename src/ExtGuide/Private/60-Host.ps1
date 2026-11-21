@@ -34,6 +34,7 @@ function New-ExtGuideWindowsHostAdapter {
     return @{
         FetchText = { param($Uri) Invoke-ExtGuideDownload -Uri $Uri }
         FetchBytes = { param($Uri) Invoke-ExtGuideDownload -Uri $Uri -AsBytes }
+        ChooseRelease = { param($Repository, $Releases, $DefaultTag) Show-ExtGuideReleaseWindow -Repository $Repository -Releases $Releases -DefaultTag $DefaultTag }
         GetLocalApplicationDataPath = { [Environment]::GetFolderPath('LocalApplicationData') }
         ChooseDestination = { param($Manifest, $Recommended, $Remembered) Show-ExtGuideDestinationWindow -Manifest $Manifest -RecommendedDestination $Recommended -RememberedDestination $Remembered }
         ChooseFallbackDestination = { param($Manifest) Select-ExtGuideFallbackDestination -Manifest $Manifest }
